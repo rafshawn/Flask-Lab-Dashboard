@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2><i class="fa-solid fa-users" style="color:var(--primary-color);"></i> Technicians</h2>
+</div>
+
+<!-- Technicians Table -->
+<div class="widget" style="margin-bottom: 2rem;">
+    <div class="apex-table-card">
+        <table class="table align-middle" id="technicians-table">
+            <thead>
+                <tr>
+                    <th>Technician</th>
+                    <th>Role</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Office</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tech in technicians %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('technicians.technician_profile', id=tech.id) }}" style="display:flex; align-items:center; gap:0.75rem; text-decoration:none; color:var(--text-main);">
+                            <img src="https://ui-avatars.com/api/?name={{ tech.name | urlencode }}&background=10b981&color=fff&bold=true&size=36" alt="" style="width:36px; height:36px; border-radius:50%;">
+                            <span style="font-weight:600;">{{ tech.name }}</span>
+                        </a>
+                    </td>
+                    <td>
+                        {% if tech.role == 'admin' %}
+                            <span class="badge badge-active" style="font-size:0.75rem;">Admin</span>
+                        {% else %}
+                            <span class="badge" style="background:rgba(59,130,246,0.15); color:#3b82f6; font-size:0.75rem;">Technician</span>
+                        {% endif %}
+                    </td>
+                    <td style="color:var(--text-muted);">{{ tech.email or '—' }}</td>
+                    <td style="color:var(--text-muted);">{{ tech.phone or '—' }}</td>
+                    <td style="color:var(--text-muted);">{{ tech.office or '—' }}</td>
+                    <td class="text-end">
+                        <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
+                            <a href="{{ url_for('technicians.technician_profile', id=tech.id) }}" class="btn-icon" title="View Profile" style="color:var(--primary-color);">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                            <button type="button" onclick="openDeleteModal('{{ url_for('technicians.delete_technician', id=tech.id) }}', 'Delete technician {{ tech.name }}? Their test records will be unlinked.')" class="btn-icon" title="Delete" style="color:var(--danger);">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;">No technicians found. Add one below.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Technician -->
+<div class="widget">
+    <h2>Add Technician</h2>
+    <form method="POST" action="{{ url_for('technicians.add_technician') }}" style="margin-top:1rem;">
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem;">
+            <div>
+                <label style="font-weight:600; font-size:0.85rem; margin-bottom:0.3rem; display:block; color:var(--text-muted);">Name *</label>
+                <input type="text" name="name" required placeholder="Full name..." style="width:100%; background:var(--bg-color); color:var(--text-main); border:1px solid var(--border-color); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
+            </div>
+            <div>
+                <label style="font-weight:600; font-size:0.85rem; margin-bottom:0.3rem; display:block; color:var(--text-muted);">Email</label>
+                <input type="email" name="email" placeholder="email@example.com" style="width:100%; background:var(--bg-color); color:var(--text-main); border:1px solid var(--border-color); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
+            </div>
+            <div>
+                <label style="font-weight:600; font-size:0.85rem; margin-bottom:0.3rem; display:block; color:var(--text-muted);">Phone</label>
+                <input type="text" name="phone" placeholder="555-555-5555" style="width:100%; background:var(--bg-color); color:var(--text-main); border:1px solid var(--border-color); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
+            </div>
+            <div>
+                <label style="font-weight:600; font-size:0.85rem; margin-bottom:0.3rem; display:block; color:var(--text-muted);">Office</label>
+                <input type="text" name="office" placeholder="Building, Room..." style="width:100%; background:var(--bg-color); color:var(--text-main); border:1px solid var(--border-color); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
+            </div>
+            <div>
+                <label style="font-weight:600; font-size:0.85rem; margin-bottom:0.3rem; display:block; color:var(--text-muted);">Role</label>
+                <select name="role" style="width:100%; background:var(--bg-color); color:var(--text-main); border:1px solid var(--border-color); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
+                    <option value="technician">Technician</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+        </div>
+        <div style="margin-top:1.25rem; text-align:right;">
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Technician</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Init DataTable
+    if (typeof $.fn.DataTable !== 'undefined') {
+        $(document).ready(function() {
+            $('#technicians-table').DataTable({
+                paging: false,
+                info: false,
+                searching: true,
+                order: [[0, 'asc']],
+                language: { search: "", searchPlaceholder: "Search technicians..." }
+            });
+        });
+    }
+</script>
+{% endblock %}

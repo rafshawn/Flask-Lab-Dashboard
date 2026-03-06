@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-container widget">
+    <h2>Add Test for {{ hood.hood_id }}</h2>
+    <form method="POST" action="{{ url_for('hoods.add_test', id=hood.id) }}" class="modern-form" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="test_date">Date Tested</label>
+            <input type="date" id="test_date" name="test_date" required>
+        </div>
+        <div class="form-group">
+            <label for="technologist">Technologist Name</label>
+            <input type="text" id="technologist" name="technologist" placeholder="e.g. John Doe">
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+                <label for="work_order_no">Work Order No</label>
+                <input type="text" id="work_order_no" name="work_order_no" placeholder="e.g. WO-1234">
+            </div>
+            <div class="form-group">
+                <label for="report_no">Report No</label>
+                <input type="text" id="report_no" name="report_no" placeholder="e.g. REP-5678">
+            </div>
+        </div>
+
+        <h3 style="margin-top:2rem; margin-bottom:1rem; border-bottom:1px solid var(--border-color); padding-bottom:0.5rem;">Required Certification Tests</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+                <label for="avg_face_velocity_full">Avg Face Velocity (Full Open, fpm)</label>
+                <input type="number" step="0.1" id="avg_face_velocity_full" name="avg_face_velocity_full" placeholder="e.g. 105.0">
+            </div>
+            <div class="form-group">
+                <label for="avg_face_velocity_half">Avg Face Velocity (Half Open, fpm)</label>
+                <input type="number" step="0.1" id="avg_face_velocity_half" name="avg_face_velocity_half" placeholder="e.g. 100.0">
+            </div>
+            <div class="form-group">
+                <label for="tri_color_design">Tri-Color Test (Design)</label>
+                <select id="tri_color_design" name="tri_color_design">
+                    <option value="N/A" selected>N/A</option>
+                    <option value="Pass">Pass</option>
+                    <option value="Fail">Fail</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="tri_color_full">Tri-Color Test (Full Open)</label>
+                <select id="tri_color_full" name="tri_color_full">
+                    <option value="N/A" selected>N/A</option>
+                    <option value="Pass">Pass</option>
+                    <option value="Fail">Fail</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="tri_color_walkby">Tri-Color Test (Walk By)</label>
+                <select id="tri_color_walkby" name="tri_color_walkby">
+                    <option value="N/A" selected>N/A</option>
+                    <option value="Pass">Pass</option>
+                    <option value="Fail">Fail</option>
+                </select>
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="test_rating">Overall Test Rating (Status)</label>
+                <select id="test_rating" name="test_rating">
+                    <option value="Pass">Pass</option>
+                    <option value="Fail">Fail</option>
+                </select>
+            </div>
+        </div>
+
+        <h3 style="margin-top:2rem; margin-bottom:1rem; border-bottom:1px solid var(--border-color); padding-bottom:0.5rem;">Documentation & Evidence</h3>
+        <div class="form-group" style="background:var(--surface-color); padding:1rem; border-radius:8px; border:1px solid var(--border-color);">
+            <label for="test_media">Test Media (Photo/Video evidence)</label>
+            <input type="file" id="test_media" name="test_media" accept="image/*,video/*" style="width:100%; margin-top:0.5rem;">
+        </div>
+        <div class="form-group">
+            <label for="comments">Comments</label>
+            <textarea id="comments" name="comments" rows="3" style="width: 100%; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); padding: 0.75rem; font-family: inherit; font-size: 1rem;"></textarea>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Test</button>
+            <a href="{{ url_for('hoods.hood_detail', id=hood.id) }}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

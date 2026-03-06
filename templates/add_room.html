@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-container widget">
+    <h2>Add New Room</h2>
+    <form method="POST" action="{{ url_for('organizations.add_room') }}" class="modern-form">
+        <div class="form-group">
+            <label for="floor_id">Location (Floor)</label>
+            <select id="floor_id" name="floor_id" required class="form-select">
+                <option value="">-- Select a Floor --</option>
+                {% for floor in floors %}
+                <option value="{{ floor.id }}">{{ floor.building.name }} - {{ floor.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="room_no">Room Number</label>
+            <input type="text" id="room_no" name="room_no" required placeholder="e.g. SN-2104">
+        </div>
+        <div class="form-group" style="display:flex; align-items:center; gap:0.5rem; margin-top:1rem;">
+            <input type="checkbox" id="is_active" name="is_active" checked style="width:auto; margin:0;">
+            <label for="is_active" style="margin:0;">Is Active</label>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Room</button>
+            <a href="{{ url_for('organizations.list_rooms') }}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

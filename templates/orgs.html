@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2>Organizations Directory</h2>
+    <div>
+        <a href="{{ url_for('organizations.add_org') }}" class="btn-primary"><i class="fa-solid fa-plus"></i> New Organization</a>
+    </div>
+</div>
+
+<div class="apex-table-card">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Logo</th>
+                <th>Name</th>
+                <th>City / State</th>
+                <th>Buildings</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for org in orgs %}
+            <tr>
+                <td>
+                    {% if org.logo_path %}
+                        <img src="{{ url_for('static', filename=org.logo_path) }}" alt="Logo" style="height:30px; object-fit:contain; border-radius:4px;">
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td style="font-weight:600;">
+                    <a href="{{ url_for('organizations.org_detail', id=org.id) }}" style="color:var(--primary-color); text-decoration:none;">{{ org.name }}</a>
+                </td>
+                <td>{{ org.city }}, {{ org.state }}</td>
+                <td>{{ org.buildings|length }} buildings</td>
+                <td class="text-end">
+                    <div class="action-buttons">
+                        <a href="{{ url_for('organizations.edit_org', id=org.id) }}" class="btn-icon" title="Edit Organization">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" class="text-center">No organizations currently available.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

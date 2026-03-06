@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-container widget">
+    <h2>Add Cycle to Test ({{ test.test_date }})</h2>
+    <form method="POST" action="{{ url_for('hoods.add_cycle', id=test.id) }}" class="modern-form">
+        <div class="form-group">
+            <label for="cycle_index">Cycle Index (Optional: defaults to next #)</label>
+            <input type="number" id="cycle_index" name="cycle_index">
+        </div>
+        <div class="form-group">
+            <label for="cycle_rating">Cycle Rating</label>
+            <select id="cycle_rating" name="cycle_rating">
+                <option value="Pass">Pass</option>
+                <option value="Fail">Fail</option>
+            </select>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+                <label for="opening_height">Opening Height (in)</label>
+                <input type="number" step="0.1" id="opening_height" name="opening_height" placeholder="e.g. 18.0">
+            </div>
+            <div class="form-group">
+                <label for="opening_width">Opening Width (in)</label>
+                <input type="number" step="0.1" id="opening_width" name="opening_width" placeholder="e.g. 72.0">
+            </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+            <div class="form-group">
+                <label for="face_v_avg">Face Vel Avg</label>
+                <input type="number" step="0.1" id="face_v_avg" name="face_v_avg" placeholder="e.g. 100.5">
+            </div>
+            <div class="form-group">
+                <label for="cross_h_avg">Cross H Avg</label>
+                <input type="number" step="0.1" id="cross_h_avg" name="cross_h_avg" placeholder="e.g. 25.0">
+            </div>
+            <div class="form-group">
+                <label for="cross_v_avg">Cross V Avg</label>
+                <input type="number" step="0.1" id="cross_v_avg" name="cross_v_avg" placeholder="e.g. 15.0">
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Cycle</button>
+            <a href="{{ url_for('hoods.test_detail', id=test.id) }}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

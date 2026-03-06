@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2><i class="fa-solid fa-gear" style="color:var(--primary-color);"></i> Organization Settings</h2>
+</div>
+
+<!-- General Preferences -->
+<div class="widget" style="margin-bottom: 2rem;">
+    <h2>General Preferences</h2>
+    <form method="POST" action="{{ url_for('settings.org_settings') }}">
+        <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: var(--bg-color); border-radius: 8px; border: 1px solid var(--border-color);">
+                <div>
+                    <strong>Default Face Velocity (FPM)</strong>
+                    <p style="color: var(--text-muted); margin: 0.25rem 0 0; font-size: 0.9rem;">The default design spec face velocity for new fumehoods (e.g. 100 FPM standard, 80 FPM for Core Science).</p>
+                </div>
+                <input type="number" name="face_velocity_default" value="{{ settings.face_velocity_default if settings else 100 }}" step="0.1" min="0" style="width: 100px; background: var(--surface-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.5rem; text-align: center; font-size: 1rem; margin-left: 1rem;">
+            </div>
+        </div>
+        <div style="margin-top: 1.5rem; text-align: right;">
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-save"></i> Save Preferences</button>
+        </div>
+    </form>
+</div>
+
+<!-- Custom Test Types Manager -->
+<div class="widget" style="margin-bottom: 2rem;">
+    <h2>Custom Test Types</h2>
+    <p style="color: var(--text-muted); margin-bottom: 1rem;">Define custom test fields that appear on fumehood profiles. Admins can create, activate/deactivate, and delete test types. Choose a field type to control how data is entered.</p>
+
+    <div class="apex-table-card">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Test Name</th>
+                    <th>Field Type</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ct in custom_tests %}
+                <tr>
+                    <td style="color: var(--text-muted);">{{ loop.index }}</td>
+                    <td style="font-weight: 600;">{{ ct.name }}</td>
+                    <td>
+                        {% if ct.field_type == 'date' %}
+                            <span class="badge" style="background: rgba(59,130,246,0.15); color: #3b82f6; font-size: 0.75rem;"><i class="fa-solid fa-calendar"></i> Date</span>
+                        {% elif ct.field_type == 'text' %}
+                            <span class="badge" style="background: rgba(139,92,246,0.15); color: #8b5cf6; font-size: 0.75rem;"><i class="fa-solid fa-font"></i> Text</span>
+                        {% elif ct.field_type == 'number' %}
+                            <span class="badge" style="background: rgba(245,158,11,0.15); color: #f59e0b; font-size: 0.75rem;"><i class="fa-solid fa-hashtag"></i> Number</span>
+                        {% elif ct.field_type == 'pass_fail' %}
+                            <span class="badge" style="background: rgba(16,185,129,0.15); color: #10b981; font-size: 0.75rem;"><i class="fa-solid fa-check-double"></i> Pass/Fail</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if ct.is_active %}
+                            <span class="badge badge-active" style="font-size: 0.75rem;">Active</span>
+                        {% else %}
+                            <span class="badge" style="background: rgba(156,163,175,0.2); color: var(--text-muted); font-size: 0.75rem;">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <div class="action-buttons" style="display:flex; gap:0.25rem; justify-content:flex-end;">
+                            <form method="POST" action="{{ url_for('settings.toggle_custom_test_type', id=ct.id) }}" style="margin:0;">
+                                <button type="submit" class="btn-icon" title="{{ 'Deactivate' if ct.is_active else 'Activate' }}">
+                                    <i class="fa-solid {{ 'fa-toggle-on' if ct.is_active else 'fa-toggle-off' }}" style="color: {{ 'var(--primary-color)' if ct.is_active else 'var(--text-muted)' }};"></i>
+                                </button>
+                            </form>
+                            <button type="button" onclick="openDeleteModal('{{ url_for('settings.delete_custom_test_type', id=ct.id) }}', 'Delete custom test type: {{ ct.name }}? All saved values for this test on fumehoods will also be removed.')" class="btn-icon" title="Delete" style="color: var(--danger);">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:1.5rem;">No custom test types defined yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add New Custom Test Type -->
+    <form method="POST" action="{{ url_for('settings.add_custom_test_type') }}" style="margin-top: 1.5rem; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+        <input type="text" name="name" placeholder="Test name (e.g. Tracer Gas Test)..." required style="flex: 1; min-width: 200px; background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem 1rem; font-size: 0.95rem;">
+        <select name="field_type" style="background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem 0.75rem; font-size: 0.95rem;">
+            <option value="date">📅 Date</option>
+            <option value="text">📝 Text</option>
+            <option value="number">🔢 Number</option>
+            <option value="pass_fail">✅ Pass/Fail</option>
+        </select>
+        <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Test Type</button>
+    </form>
+</div>
+
+<!-- Action Options Manager -->
+<div class="widget">
+    <h2>Action Options</h2>
+    <p style="color: var(--text-muted); margin-bottom: 1rem;">Manage the dropdown choices available for the "Action Taken" field on fumehoods. Default options cannot be deleted.</p>
+
+    <div class="apex-table-card">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Label</th>
+                    <th>Type</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for action in actions %}
+                <tr>
+                    <td style="color: var(--text-muted);">{{ loop.index }}</td>
+                    <td style="font-weight: 600;">{{ action.label }}</td>
+                    <td>
+                        {% if action.is_default %}
+                            <span class="badge badge-active" style="font-size: 0.75rem;">Default</span>
+                        {% else %}
+                            <span class="badge badge-maintenance" style="font-size: 0.75rem;">Custom</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        {% if not action.is_default %}
+                        <button type="button" onclick="openDeleteModal('{{ url_for('settings.delete_action_option', id=action.id) }}', 'Are you sure you want to delete the action option: {{ action.label }}?')" class="btn-icon" title="Delete" style="color: var(--danger);">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                        {% else %}
+                        <span style="color: var(--text-muted); font-size: 0.8rem;"><i class="fa-solid fa-lock"></i></span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add New Action -->
+    <form method="POST" action="{{ url_for('settings.add_action_option') }}" style="margin-top: 1.5rem; display: flex; gap: 0.75rem; align-items: center;">
+        <input type="text" name="label" placeholder="New action label..." required style="flex: 1; background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem 1rem; font-size: 0.95rem;">
+        <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Action</button>
+    </form>
+</div>
+
+<style>
+    /* Toggle Switch */
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 26px;
+    }
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: var(--border-color);
+        transition: 0.3s;
+        border-radius: 26px;
+    }
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+        background-color: var(--primary-color);
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(24px);
+    }
+</style>
+{% endblock %}

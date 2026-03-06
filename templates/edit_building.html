@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-container widget">
+    <h2>Edit Building: {{ building.name }}</h2>
+    <form method="POST" action="{{ url_for('organizations.edit_building', id=building.id) }}" class="modern-form">
+        <div class="form-group">
+            <label for="name">Building Name</label>
+            <input type="text" id="name" name="name" required value="{{ building.name }}">
+        </div>
+        <div class="form-group">
+            <label for="campus">Campus Prefix (Optional)</label>
+            <input type="text" id="campus" name="campus" value="{{ building.campus or '' }}">
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+                <label for="address_1">Address Line 1</label>
+                <input type="text" id="address_1" name="address_1" value="{{ building.address_1 or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="address_2">Address Line 2 (Optional)</label>
+                <input type="text" id="address_2" name="address_2" value="{{ building.address_2 or '' }}">
+            </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" value="{{ building.city or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="state">State</label>
+                <input type="text" id="state" name="state" value="{{ building.state or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="zip_code">Zip Code</label>
+                <input type="text" id="zip_code" name="zip_code" value="{{ building.zip_code or '' }}">
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Changes</button>
+            <a href="{{ url_for('organizations.building_detail', id=building.id) }}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

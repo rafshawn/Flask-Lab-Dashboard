@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticker - {{ hood.hood_id }}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .sticker-card {
+            background: white;
+            width: 320px; /* Physical sticker width representation */
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Top Section */
+        .sticker-header {
+            text-align: center;
+            padding: 1.5rem 1rem 1rem;
+        }
+        .sticker-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #4b5563;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+        .sticker-id {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #111827;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        /* QR Code Section */
+        .sticker-qr-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.5rem 1.5rem 1.5rem;
+            background: white;
+            flex-grow: 1;
+        }
+        .sticker-qr {
+            width: 100%;
+            max-width: 220px;
+            height: auto;
+            border: 4px solid white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 8px;
+        }
+
+        /* Scan Me Bar */
+        .scan-bar {
+            background-color: #2e7d32; /* Vivid Green */
+            color: white;
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: 0.1em;
+            padding: 0.75rem 0;
+            text-transform: uppercase;
+            box-shadow: 0 -4px 10px rgba(46, 125, 50, 0.2);
+            z-index: 10;
+        }
+
+        /* Footer Branding */
+        .sticker-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            padding: 1.25rem;
+            border-top: 2px solid #f1f5f9;
+        }
+
+        .branding-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .org-logo {
+            max-height: 36px;
+            max-width: 80px;
+            object-fit: contain;
+        }
+
+        /* Fallback FHC Wreath Design if no logo */
+        .wreath-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid #d4af37; /* Gold */
+            color: #d4af37;
+            font-weight: 800;
+            font-size: 0.7rem;
+            background: #fffdf5;
+            box-shadow: 0 2px 4px rgba(212, 175, 55, 0.2);
+        }
+
+        .branding-right-text {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #111827;
+            text-align: right;
+            line-height: 1.2;
+            text-transform: uppercase;
+            max-width: 120px;
+        }
+
+        /* Print formatting */
+        @media print {
+            body {
+                background: none;
+                margin: 0;
+                padding: 0;
+                align-items: flex-start;
+                justify-content: flex-start;
+            }
+            @page {
+                size: portrait;
+                margin: 0;
+            }
+            .sticker-card {
+                box-shadow: none;
+                border: none;
+                width: auto;
+                max-width: 100%;
+            }
+            /* Hide URL printing */
+            a[href]:after {
+                content: none !important;
+            }
+        }
+    </style>
+    <!-- FontAwesome for fallback -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="sticker-card">
+        <!-- Header -->
+        <div class="sticker-header">
+            <div class="sticker-title">Hood Identification Number</div>
+            <h1 class="sticker-id">{{ hood.hood_id }}</h1>
+        </div>
+
+        <!-- QR Code -->
+        <div class="sticker-qr-container">
+            {% if hood.qr_code_path %}
+                <img src="{{ url_for('static', filename=hood.qr_code_path) }}" alt="QR Code" class="sticker-qr">
+            {% else %}
+                <div class="sticker-qr" style="display:flex; align-items:center; justify-content:center; background:#f1f5f9; color:#94a3b8; font-weight:600;">
+                    No QR Generated
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Call to Action -->
+        <div class="scan-bar">
+            SCAN ME
+        </div>
+
+        <!-- Footer -->
+        <div class="sticker-footer">
+            <div class="branding-left">
+                {% if org and org.logo_path %}
+                    <img src="{{ url_for('static', filename=org.logo_path) }}" alt="Organization Logo" class="org-logo">
+                {% else %}
+                    <div class="wreath-icon">FHC</div>
+                {% endif %}
+            </div>
+            <div class="branding-right-text">
+                Fume Hood<br>Certified
+            </div>
+        </div>
+    </div>
+
+    <!-- Auto-print script -->
+    <script>
+        window.onload = function() {
+            // Optional: automatically prompt print dialogue
+            // window.print();
+        }
+    </script>
+</body>
+</html>

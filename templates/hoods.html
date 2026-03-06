@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if empty_state %}
+<div class="empty-state" style="text-align: center; padding: 4rem 2rem; background: var(--surface-color); border: 1px dashed var(--border-color); border-radius: 12px; margin-top: 2rem;">
+    <i class="fa-solid fa-wind" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1.5rem;"></i>
+    <h2>No Fumehoods Found</h2>
+    <p style="color: var(--text-muted); max-width: 500px; margin: 1rem auto; line-height: 1.6;">
+        You haven't set up any organizations or fumehoods yet. Create an organization first to start tracking your equipment.
+    </p>
+    <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 1rem;">
+        <a href="{{ url_for('organizations.add_org') }}" class="btn-primary" style="font-size: 1.1rem; padding: 0.75rem 1.5rem;">
+            <i class="fa-solid fa-plus"></i> Add Organization
+        </a>
+    </div>
+</div>
+{% else %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2>
+        {% if current_filter == 'Overdue' %}Overdue Hoods
+        {% elif current_filter == 'Due1Week' %}Due in 7 Days
+        {% elif current_filter == 'Due2Months' %}Due in 2 Months
+        {% elif current_filter == 'ActionTaken' %}Action Required
+        {% elif current_filter == 'ActiveValid' %}Active & Valid Hoods
+        {% elif current_filter == 'Maintenance' %}Hoods in Maintenance
+        {% else %}All Fumehoods{% endif %}
+    </h2>
+    <div style="display: flex; gap: 0.5rem;">
+        <button class="btn-secondary" onclick="openConfirmModal('Email reporting will be enabled in a future update once the SMTP server is configured.', function(){}, 'OK', '#4b5563')" title="Email Report (Coming Soon)">
+            <i class="fa-solid fa-envelope"></i> Email Report
+        </button>
+        <a href="{{ url_for('hoods.print_hoods', filter=current_filter) }}" target="_blank" class="btn-primary" style="background-color: var(--text-main); border-color: var(--text-main);">
+            <i class="fa-solid fa-file-pdf"></i> Generate Report
+        </a>
+        <a href="{{ url_for('hoods.add_hood') }}" class="btn-primary">
+            <i class="fa-solid fa-plus"></i> New Hood
+        </a>
+    </div>
+</div>
+
+<!-- Status Pill Filters -->
+<div class="filter-chips">
+    <button class="chip active" onclick="filterTable('')">All</button>
+    <button class="chip" onclick="filterTable('Active')">Active</button>
+    <button class="chip" onclick="filterTable('Maintenance')">Maintenance</button>
+    <button class="chip" onclick="filterCondition('EXPIRED')">Expired</button>
+</div>
+
+<div class="apex-table-card">
+    <table id="hoodsTable" class="table align-middle">
+        <thead>
+            <tr>
+                <th>Hood ID</th>
+                <th>Room</th>
+                <th>Dept</th>
+                <th>Status</th>
+                <th>Last Certified</th>
+                <th>Expiration</th>
+                <th>Condition</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for hood in hoods %}
+            <tr>
+                <td style="font-weight:600;">
+                    <a href="{{ url_for('hoods.hood_detail', id=hood.id) }}" style="color:var(--primary-color); text-decoration:none;">{{ hood.hood_id }}</a>
+                </td>
+                <td>{{ hood.room.building_name }} {{ hood.room.room_no }}</td>
+                <td>{{ hood.dept|default('-', true) }}</td>
+                <td><span class="badge badge-{{ hood.status|lower }}">{{ hood.status }}</span></td>
+                {% set lt = hood.latest_test() %}
+                <td>{{ lt.test_date if lt else 'N/A' }}</td>
+                <td>{{ hood.expiration_date() or 'N/A' }}</td>
+                <td>
+                    {% if hood.is_expired(today) and hood.status == 'Active' %}
+                        <span class="badge badge-error">EXPIRED</span>
+                    {% else %}
+                        <span class="badge badge-success">OK</span>
+                    {% endif %}
+                </td>
+                <td class="text-end">
+                    <div class="action-buttons">
+                        <a href="{{ url_for('hoods.edit_hood', id=hood.id) }}" class="btn-icon" title="Edit Hood">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                        <a href="{{ url_for('hoods.print_hood_detail', id=hood.id) }}" target="_blank" class="btn-icon" title="Download/Print Record">
+                            <i class="fa-solid fa-file-arrow-down"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    let dtTable;
+    $(document).ready(function() {
+        dtTable = $('#hoodsTable').DataTable({
+            responsive: true,
+            pageLength: 10,
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search records..."
+            },
+            dom: '<"table-top"f>rt<"table-bottom"ip>',
+            columnDefs: [
+                { orderable: false, targets: 7 } // Disable sorting on Actions
+            ]
+        });
+
+        // Setup filter chip active state toggle
+        $('.chip').click(function() {
+            $('.chip').removeClass('active');
+            $(this).addClass('active');
+        });
+    });
+
+    function filterTable(val) {
+        // Clear any previous individual column searches
+        dtTable.columns().search('');
+        // Search globally by status string
+        if (val) {
+             dtTable.column(3).search('\\b' + val + '\\b', true, false).draw(); // regex exact match
+        } else {
+             dtTable.search('').draw(); // Clear all
+        }
+    }
+
+    function filterCondition(val) {
+        dtTable.columns().search('');
+        dtTable.column(6).search(val).draw();
+    }
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O2 Fumehoods</title>
+    <!-- CSS version parameter added for cache busting -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=2) }}">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-flask" style="color: var(--primary-color);"></i>
+                <span class="logo-text">O2 Fumehoods</span>
+            </div>
+            <div class="sidebar-action">
+                <a href="{{ url_for('hoods.add_hood') }}" class="btn-primary w-100" style="display:flex; justify-content:center; align-items:center; gap:0.5rem;">
+                    <i class="fa-solid fa-plus"></i> <span>Add Hood</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('dashboard.dashboard') }}" class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                    <i class="fa-solid fa-chart-line"></i> <span>Dashboard</span>
+                </a>
+                <a href="{{ url_for('organizations.list_orgs') }}" class="nav-item {% if 'org' in request.endpoint or 'building' in request.endpoint or 'room' in request.endpoint %}active{% endif %}">
+                    <i class="fa-solid fa-sitemap"></i> <span>Organizations</span>
+                </a>
+                <a href="{{ url_for('hoods.list_hoods') }}" class="nav-item {% if 'hood' in request.endpoint and 'add' not in request.endpoint and not request.args.get('filter') %}active{% endif %}">
+                    <i class="fa-solid fa-wind"></i> <span>All Hoods</span>
+                </a>
+                <a href="{{ url_for('technicians.list_technicians') }}" class="nav-item {% if 'technician' in request.endpoint or request.endpoint == 'technician_profile' %}active{% endif %}">
+                    <i class="fa-solid fa-users"></i> <span>Technicians</span>
+                </a>
+
+                <div class="sidebar-section-title" style="margin: 1.5rem 0 0.5rem 1.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Reports</div>
+
+                <a href="{{ url_for('hoods.list_hoods', filter='Overdue') }}" class="nav-item {% if 'hood' in request.endpoint and request.args.get('filter') == 'Overdue' %}active{% endif %}">
+                    <i class="fa-solid fa-file-invoice"></i> <span style="font-size: 0.9em;">Overdue Hoods</span>
+                </a>
+                <a href="{{ url_for('hoods.list_hoods', filter='Due1Week') }}" class="nav-item {% if 'hood' in request.endpoint and request.args.get('filter') == 'Due1Week' %}active{% endif %}">
+                    <i class="fa-solid fa-calendar-week"></i> <span style="font-size: 0.9em;">Due in 7 Days</span>
+                </a>
+                <a href="{{ url_for('hoods.list_hoods', filter='Due2Months') }}" class="nav-item {% if 'hood' in request.endpoint and request.args.get('filter') == 'Due2Months' %}active{% endif %}">
+                    <i class="fa-solid fa-calendar-days"></i> <span style="font-size: 0.9em;">Due in 2 Months</span>
+                </a>
+                <a href="{{ url_for('hoods.list_hoods', filter='ActionTaken') }}" class="nav-item {% if 'hood' in request.endpoint and request.args.get('filter') == 'ActionTaken' %}active{% endif %}">
+                    <i class="fa-solid fa-clipboard-list"></i> <span style="font-size: 0.9em;">Action Required</span>
+                </a>
+
+                <div style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 0.5rem; width: 80%; margin-left:10%;"></div>
+
+                <a href="{{ url_for('settings.org_settings') }}" class="nav-item {% if request.endpoint == 'settings.org_settings' %}active{% endif %}">
+                    <i class="fa-solid fa-gear"></i> <span>Settings</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="{{ url_for('technicians.user_profile') }}" class="sidebar-user-card">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=10b981&color=fff&bold=true&size=36" alt="Avatar" class="sidebar-user-avatar">
+                    <div class="sidebar-user-info">
+                        <span class="sidebar-user-name">Admin User</span>
+                        <span class="sidebar-user-role">Administrator</span>
+                    </div>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-wrapper">
+            <!-- Top Navbar (User Info) -->
+            <header class="top-navbar">
+                <div class="navbar-left">
+                    <button id="mobile-menu-toggle" class="icon-btn d-md-none">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <!-- Desktop sidebar collapse button -->
+                    <button id="desktop-sidebar-toggle" class="icon-btn d-none-md ms-3" style="margin-left: 0.5rem;" title="Toggle Sidebar">
+                        <i class="fa-solid fa-bars-staggered"></i>
+                    </button>
+                </div>
+                <!-- User Profile and Theme Toggle -->
+                <div class="navbar-right" style="display:flex; align-items:center; gap:1.5rem;">
+
+                    <!-- Organization Switcher -->
+                    {% if all_orgs %}
+                    <div class="org-switcher" style="padding-right: 1.5rem; border-right: 1px solid var(--border-color);">
+                        <form action="{{ url_for('dashboard.set_org') }}" method="POST" style="margin: 0;">
+                            <select name="org_id" class="form-select" onchange="this.form.submit()" style="background-color: var(--surface-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.35rem 2rem 0.35rem 0.75rem; font-size: 0.875rem; font-weight: 500; cursor: pointer;">
+                                {% for org in all_orgs %}
+                                <option value="{{ org.id }}" {% if current_org and current_org.id == org.id %}selected{% endif %}>{{ org.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </div>
+                    {% endif %}
+
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
+                        <i id="theme-icon" class="fa-solid fa-moon"></i>
+                    </button>
+
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=10b981&color=fff&bold=true" alt="User Avatar" class="avatar">
+                        <span class="username">Admin User</span>
+                        <i class="fa-solid fa-chevron-down" style="color: var(--text-muted); font-size: 0.8rem;"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Specific Content -->
+            <main class="container">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    <div class="flash-messages" style="margin-bottom: 2rem;">
+                      {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" style="padding: 1rem; border-radius: 6px; background: {% if category == 'error' %}var(--danger-light){% else %}var(--primary-light){% endif %}; color: {% if category == 'error' %}var(--danger){% else %}var(--primary-color){% endif %}; border-left: 4px solid {% if category == 'error' %}var(--danger){% else %}var(--primary-color){% endif %};">
+                            <i class="fa-solid {% if category == 'error' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}" style="margin-right:0.5rem;"></i>
+                            {{ message }}
+                        </div>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endwith %}
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Mobile Sidebar Dark Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Global Delete Custom Modal -->
+    <div class="modal-overlay" id="global-delete-modal">
+        <div class="custom-modal">
+            <div class="custom-modal-header">
+                <h3><i class="fa-solid fa-triangle-exclamation" style="color:var(--danger)"></i> <span id="modal-title">Confirm Action</span></h3>
+                <button class="close-modal-btn" id="close-modal-btn">&times;</button>
+            </div>
+            <div class="custom-modal-body">
+                <p id="delete-modal-message">Are you sure? This action cannot be undone.</p>
+            </div>
+            <div class="custom-modal-footer">
+                <button class="btn-secondary" id="cancel-delete-btn">Cancel</button>
+                <form id="global-delete-form" method="POST" style="margin:0; display:none;">
+                    <button type="submit" class="btn-primary" id="modal-submit-btn" style="background:var(--danger); border-color:var(--danger);">Yes, Delete</button>
+                </form>
+                <button class="btn-primary" id="modal-action-btn" style="display:none;" onclick="">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Delete Modal Logic
+        const deleteModal = document.getElementById('global-delete-modal');
+        const deleteForm = document.getElementById('global-delete-form');
+        const deleteMessage = document.getElementById('delete-modal-message');
+
+        function openDeleteModal(actionUrl, message) {
+            deleteForm.action = actionUrl;
+            deleteForm.style.display = 'block';
+            document.getElementById('modal-action-btn').style.display = 'none';
+            document.getElementById('modal-submit-btn').style.background = 'var(--danger)';
+            document.getElementById('modal-submit-btn').style.borderColor = 'var(--danger)';
+            document.getElementById('modal-submit-btn').textContent = 'Yes, Delete';
+            document.getElementById('modal-title').textContent = 'Confirm Deletion';
+            deleteMessage.textContent = message;
+            deleteModal.classList.add('active');
+        }
+
+        function openConfirmModal(message, callback, btnText, btnColor) {
+            deleteForm.style.display = 'none';
+            const actionBtn = document.getElementById('modal-action-btn');
+            actionBtn.style.display = 'inline-block';
+            actionBtn.textContent = btnText || 'Confirm';
+            actionBtn.style.background = btnColor || 'var(--primary-color)';
+            actionBtn.style.borderColor = btnColor || 'var(--primary-color)';
+            actionBtn.onclick = function() { closeDeleteModal(); callback(); };
+            document.getElementById('modal-title').textContent = 'Confirm Action';
+            deleteMessage.textContent = message;
+            deleteModal.classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            deleteModal.classList.remove('active');
+        }
+
+        document.getElementById('close-modal-btn').addEventListener('click', closeDeleteModal);
+        document.getElementById('cancel-delete-btn').addEventListener('click', closeDeleteModal);
+
+        // Close modal if clicking outside the box
+        deleteModal.addEventListener('click', function(e) {
+            if (e.target === deleteModal) {
+                closeDeleteModal();
+            }
+        });
+        // DOM Elements
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const desktopSidebarToggle = document.getElementById('desktop-sidebar-toggle');
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const sidebar = document.getElementById('sidebar');
+        const mainWrapper = document.querySelector('.main-wrapper');
+        const overlay = document.getElementById('sidebar-overlay');
+        const body = document.body;
+
+        // Initialize Theme from LocalStorage
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        if (currentTheme === 'light') {
+            body.classList.add('light-mode');
+            if (themeIcon) {
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            }
+        }
+
+        // Initialize Sidebar state from LocalStorage
+        const sidebarState = localStorage.getItem('sidebarState') || 'expanded';
+        // Only apply collapsed state on desktop
+        if (sidebarState === 'collapsed' && window.innerWidth >= 993) {
+            sidebar.classList.add('collapsed');
+            mainWrapper.classList.add('expanded');
+        }
+
+        // Theme Toggle Logic
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('light-mode');
+
+                if (body.classList.contains('light-mode')) {
+                    localStorage.setItem('theme', 'light');
+                    themeIcon.classList.replace('fa-moon', 'fa-sun');
+                } else {
+                    localStorage.setItem('theme', 'dark');
+                    themeIcon.classList.replace('fa-sun', 'fa-moon');
+                }
+            });
+        }
+
+        // Desktop Sidebar Toggle Logic
+        if (desktopSidebarToggle) {
+            desktopSidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+                mainWrapper.classList.toggle('expanded');
+
+                if (sidebar.classList.contains('collapsed')) {
+                    localStorage.setItem('sidebarState', 'collapsed');
+                } else {
+                    localStorage.setItem('sidebarState', 'expanded');
+                }
+            });
+        }
+
+        // Mobile Sidebar Toggle Logic
+        if (mobileMenuToggle && sidebar && overlay) {
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+            });
+
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+
+        // Fix: Clear mobile sidebar state when resizing to desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 993) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

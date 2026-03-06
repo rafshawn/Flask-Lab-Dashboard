@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if empty_state %}
+<div class="empty-state" style="text-align: center; padding: 4rem 2rem; background: var(--surface-color); border: 1px dashed var(--border-color); border-radius: 12px; margin-top: 2rem;">
+    <i class="fa-solid fa-sitemap" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1.5rem;"></i>
+    <h2>Welcome to O2 Fumehoods!</h2>
+    <p style="color: var(--text-muted); max-width: 500px; margin: 1rem auto; line-height: 1.6;">
+        It looks like you don't have any organizations set up yet. To get started, you'll need to create an organization to manage your buildings, rooms, and fumehoods.
+    </p>
+    <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 1rem;">
+        <a href="{{ url_for('organizations.add_org') }}" class="btn-primary" style="font-size: 1.1rem; padding: 0.75rem 1.5rem;">
+            <i class="fa-solid fa-plus"></i> Add Organization
+        </a>
+        <button onclick="seedDatabase()" class="btn-secondary" style="font-size: 1.1rem; padding: 0.75rem 1.5rem;">
+            <i class="fa-solid fa-database"></i> Seed Dummy Data
+        </button>
+    </div>
+</div>
+
+<script>
+    function seedDatabase() {
+        openConfirmModal(
+            'This will populate the database with dummy data. This is intended for testing purposes only. Proceed?',
+            function() {
+                fetch("{{ url_for('api_seed') }}", { method: 'POST' })
+                    .then(res => res.json())
+                    .then(data => { window.location.reload(); });
+            },
+            'Yes, Seed Data',
+            'var(--primary-color)'
+        );
+    }
+</script>
+{% else %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2>Dashboard Overview</h2>
+    <button onclick="seedDatabase()" class="btn-secondary" style="background-color: var(--primary-color); border: none; color: white; display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fa-solid fa-database"></i> Seed Dummy Data
+    </button>
+</div>
+
+<!-- Metrics Overview -->
+<div class="dashboard-metrics">
+    <a href="{{ url_for('hoods.list_hoods') }}" class="metric-card" style="text-decoration: none; color: inherit; display: block;">
+        <div class="metric-title">Total Fumehoods</div>
+        <div class="metric-value">
+            {{ total }}
+            <div class="metric-icon icon-blue">
+                <i class="fa-solid fa-wind"></i>
+            </div>
+        </div>
+    </a>
+    <a href="{{ url_for('hoods.list_hoods', filter='ActiveValid') }}" class="metric-card" style="text-decoration: none; color: inherit; display: block;">
+        <div class="metric-title">Active & Valid</div>
+        <div class="metric-value">
+            {{ status_chart.data[0] }}
+            <div class="metric-icon icon-green">
+                <i class="fa-solid fa-check-circle"></i>
+            </div>
+        </div>
+    </a>
+    <a href="{{ url_for('hoods.list_hoods', filter='Overdue') }}" class="metric-card" style="text-decoration: none; color: inherit; display: block;">
+        <div class="metric-title">Expired Certifications</div>
+        <div class="metric-value">
+            {{ status_chart.data[1] }}
+            <div class="metric-icon icon-red">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+        </div>
+    </a>
+    <a href="{{ url_for('hoods.list_hoods', filter='Maintenance') }}" class="metric-card" style="text-decoration: none; color: inherit; display: block;">
+        <div class="metric-title">In Maintenance</div>
+        <div class="metric-value">
+            {{ status_chart.data[2] }}
+            <div class="metric-icon icon-yellow">
+                <i class="fa-solid fa-wrench"></i>
+            </div>
+        </div>
+    </a>
+</div>
+
+<!-- Charts Grid -->
+<div class="dashboard-charts">
+    <!-- Revenue / Multi Line style chart - Tests over time -->
+    <div class="chart-card chart-card-full">
+        <div class="chart-header">
+            <h3>Certifications Over Last 6 Months</h3>
+        </div>
+        <div style="position: relative; height: 350px;">
+            <canvas id="testsChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Dept distribution -->
+    <div class="chart-card chart-card-half">
+        <div class="chart-header">
+            <h3>Fumehood Distribution (By Department)</h3>
+        </div>
+        <div style="position: relative; height: 300px;">
+            <canvas id="deptChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Status Doughnut -->
+    <div class="chart-card chart-card-half">
+        <div class="chart-header">
+            <h3>Current Hood Status</h3>
+        </div>
+        <div style="position: relative; height: 300px;">
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Grab data from server
+    const statusData = {{ status_chart | tojson | safe }};
+    const deptData = {{ dept_chart | tojson | safe }};
+    const testsData = {{ tests_chart | tojson | safe }};
+
+    // Shared Chart.js settings based on current theme (CSS Var)
+    Chart.defaults.color = getComputedStyle(document.body).getPropertyValue('--text-muted').trim() || '#9ca3af';
+    Chart.defaults.font.family = '"Inter", sans-serif';
+
+    // 1. Tests Over Time (Line Chart)
+    const ctxTests = document.getElementById('testsChart').getContext('2d');
+
+    // Create gradient
+    let bgGradient = ctxTests.createLinearGradient(0, 0, 0, 400);
+    bgGradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
+    bgGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+    new Chart(ctxTests, {
+        type: 'line',
+        data: {
+            labels: testsData.labels,
+            datasets: [{
+                label: 'Test Certifications Performed',
+                data: testsData.data,
+                borderColor: '#10b981',
+                backgroundColor: bgGradient,
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#10b981',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(156, 163, 175, 0.1)', drawBorder: false },
+                    ticks: { precision: 0 }
+                },
+                x: { grid: { display: false, drawBorder: false } }
+            }
+        }
+    });
+
+    // 2. Department Chart (Bar Chart)
+    const ctxDept = document.getElementById('deptChart').getContext('2d');
+    new Chart(ctxDept, {
+        type: 'bar',
+        data: {
+            labels: deptData.labels,
+            datasets: [{
+                label: 'Hoods',
+                data: deptData.data,
+                backgroundColor: '#3b82f6',
+                borderRadius: 4,
+                borderWidth: 0,
+                barPercentage: 0.6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(156, 163, 175, 0.1)', drawBorder: false },
+                    ticks: { precision: 0 }
+                },
+                x: { grid: { display: false, drawBorder: false } }
+            }
+        }
+    });
+
+    // 3. Status Chart (Doughnut Chart)
+    const ctxStatus = document.getElementById('statusChart').getContext('2d');
+    new Chart(ctxStatus, {
+        type: 'doughnut',
+        data: {
+            labels: statusData.labels,
+            datasets: [{
+                data: statusData.data,
+                backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+                borderWidth: 0,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { padding: 20, usePointStyle: true }
+                }
+            }
+        }
+    });
+
+    function seedDatabase() {
+        openConfirmModal(
+            'This will populate the database with dummy data. This is intended for testing purposes only. Proceed?',
+            function() {
+                fetch("{{ url_for('api_seed') }}", { method: 'POST' })
+                    .then(res => res.json())
+                    .then(data => { window.location.reload(); });
+            },
+            'Yes, Seed Data',
+            'var(--primary-color)'
+        );
+    }
+</script>
+{% endif %}
+{% endblock %}

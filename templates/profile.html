@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header" style="display:flex; align-items:center; gap:1rem; margin-bottom:2rem;">
+    <a href="{{ url_for('technicians.list_technicians') }}" class="btn-icon" title="Back to Technicians" style="color:var(--text-muted);">
+        <i class="fa-solid fa-chevron-left"></i>
+    </a>
+    <h2>Profile</h2>
+</div>
+
+<!-- Profile Hero Card -->
+<div class="widget" style="margin-bottom:2rem; position:relative; overflow:hidden;">
+    <!-- Gradient accent bar -->
+    <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, #10b981, #34d399, #6ee7b7);"></div>
+    <div style="display:flex; gap:2rem; align-items:center; flex-wrap:wrap; padding-top:0.5rem;">
+        <img src="https://ui-avatars.com/api/?name={{ tech.name | urlencode }}&background=10b981&color=fff&bold=true&size=96&font-size=0.4"
+             alt="{{ tech.name }}" style="width:96px; height:96px; border-radius:50%; border:3px solid var(--primary-color); flex-shrink:0;">
+        <div style="flex:1; min-width:200px;">
+            <h2 style="margin:0 0 0.25rem; font-size:1.5rem;">{{ tech.name }}</h2>
+            <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+                {% if tech.role == 'admin' %}
+                    <span class="badge badge-active" style="font-size:0.8rem;">Administrator</span>
+                {% else %}
+                    <span class="badge" style="background:rgba(59,130,246,0.15); color:#3b82f6; font-size:0.8rem;">Technician</span>
+                {% endif %}
+                {% if tech.office %}
+                <span style="color:var(--text-muted); font-size:0.9rem;"><i class="fa-solid fa-location-dot" style="margin-right:0.25rem;"></i>{{ tech.office }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Row -->
+<div class="dashboard-metrics" style="margin-bottom:2rem;">
+    <div class="metric-card">
+        <div class="metric-title">Hoods Tested</div>
+        <div class="metric-value">
+            {{ hoods_tested }}
+            <div class="metric-icon icon-blue"><i class="fa-solid fa-wind"></i></div>
+        </div>
+    </div>
+    <div class="metric-card">
+        <div class="metric-title">Tests Completed</div>
+        <div class="metric-value">
+            {{ total_tests }}
+            <div class="metric-icon" style="background: rgba(139,92,246,0.15);"><i class="fa-solid fa-vial" style="color:#8b5cf6;"></i></div>
+        </div>
+    </div>
+    <div class="metric-card">
+        <div class="metric-title">Pass Rate</div>
+        <div class="metric-value">
+            {{ pass_rate }}%
+            <div class="metric-icon" style="background: rgba(245,158,11,0.15);"><i class="fa-solid fa-chart-line" style="color:#f59e0b;"></i></div>
+        </div>
+    </div>
+    <div class="metric-card">
+        <div class="metric-title">Member Since</div>
+        <div class="metric-value" style="font-size:1.1rem;">
+            {{ tech.created_at.strftime('%b %Y') if tech.created_at else 'N/A' }}
+            <div class="metric-icon" style="background: rgba(236,72,153,0.15);"><i class="fa-solid fa-calendar" style="color:#ec4899;"></i></div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Info + Activity in 2 columns -->
+<div style="display:grid; grid-template-columns:1fr 2fr; gap:1.5rem; align-items:start;">
+
+    <!-- Contact Card -->
+    <div class="widget">
+        <h2>Contact Info</h2>
+        <ul class="summary-list" style="margin-top:1rem;">
+            <li style="display:flex; justify-content:space-between;">
+                <strong><i class="fa-solid fa-envelope" style="width:18px; color:var(--text-muted);"></i> Email</strong>
+                <span>{% if tech.email %}<a href="mailto:{{ tech.email }}" style="color:var(--primary-color); text-decoration:none;">{{ tech.email }}</a>{% else %}—{% endif %}</span>
+            </li>
+            <li style="display:flex; justify-content:space-between;">
+                <strong><i class="fa-solid fa-phone" style="width:18px; color:var(--text-muted);"></i> Phone</strong>
+                <span>{{ tech.phone or '—' }}</span>
+            </li>
+            <li style="display:flex; justify-content:space-between;">
+                <strong><i class="fa-solid fa-building" style="width:18px; color:var(--text-muted);"></i> Office</strong>
+                <span>{{ tech.office or '—' }}</span>
+            </li>
+            <li style="display:flex; justify-content:space-between;">
+                <strong><i class="fa-solid fa-shield-halved" style="width:18px; color:var(--text-muted);"></i> Role</strong>
+                <span style="text-transform:capitalize;">{{ tech.role }}</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Activity Feed -->
+    <div class="widget">
+        <h2>Recent Activity</h2>
+        {% if recent_tests %}
+        <div style="margin-top:1rem; display:flex; flex-direction:column; gap:0;">
+            {% for test in recent_tests %}
+            <a href="{{ url_for('hoods.test_detail', id=test.id) }}" style="display:flex; align-items:center; gap:1rem; padding:0.85rem 0.75rem; text-decoration:none; color:var(--text-main); border-bottom:1px solid var(--border-color); transition:background 0.15s;" onmouseover="this.style.background='rgba(16,185,129,0.04)'" onmouseout="this.style.background='transparent'">
+                <div style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+                    {% if test.test_rating == 'Pass' %}background:rgba(16,185,129,0.15);{% else %}background:rgba(239,68,68,0.15);{% endif %}">
+                    <i class="fa-solid {% if test.test_rating == 'Pass' %}fa-check{% else %}fa-xmark{% endif %}"
+                       style="{% if test.test_rating == 'Pass' %}color:#10b981;{% else %}color:#ef4444;{% endif %} font-size:0.9rem;"></i>
+                </div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-weight:600; font-size:0.9rem;">{{ test.hood.hood_id }}</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted);">{{ test.test_rating }} · {{ test.work_order_no or 'No WO' }}</div>
+                </div>
+                <div style="text-align:right; flex-shrink:0;">
+                    <span style="font-size:0.8rem; color:var(--text-muted);">{{ test.test_date.strftime('%b %d, %Y') }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p style="color:var(--text-muted); padding:2rem 0; text-align:center;">No test activity yet.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<style>
+    @media (max-width: 768px) {
+        div[style*="grid-template-columns:1fr 2fr"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+{% endblock %}

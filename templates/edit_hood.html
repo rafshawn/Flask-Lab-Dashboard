@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-container widget">
+    <h2>Edit Fumehood: {{ hood.hood_id }}</h2>
+    <form method="POST" action="{{ url_for('hoods.edit_hood', id=hood.id) }}" class="modern-form" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="hood_id">Hood ID</label>
+            <input type="text" id="hood_id" name="hood_id" required value="{{ hood.hood_id }}">
+        </div>
+
+        <div class="form-group">
+            <label for="photo">Hood Photo (Optional - upload new to replace)</label>
+            <input type="file" id="photo" name="photo" accept="image/*">
+            {% if hood.photo_path %}
+            <small style="display:block; margin-top:0.5rem; color:var(--text-muted);">Current photo: {{ hood.photo_path.split('/')[-1] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="room_id">Select Room</label>
+            <select id="room_id" name="room_id" required>
+                {% for r in rooms %}
+                <option value="{{ r.id }}" {% if r.id == hood.room_id %}selected{% endif %}>{{ r.building_name }} - Rm {{ r.room_no }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Current Status</label>
+            <select id="status" name="status">
+                <option value="Active" {% if hood.status == 'Active' %}selected{% endif %}>Active</option>
+                <option value="Maintenance" {% if hood.status == 'Maintenance' %}selected{% endif %}>Maintenance</option>
+                <option value="Decommissioned" {% if hood.status == 'Decommissioned' %}selected{% endif %}>Decommissioned</option>
+            </select>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+                <label for="faculty">Faculty</label>
+                <input type="text" id="faculty" name="faculty" value="{{ hood.faculty or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="dept">Department</label>
+                <input type="text" id="dept" name="dept" value="{{ hood.dept or '' }}">
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+                <label for="contact_name">Contact Name</label>
+                <input type="text" id="contact_name" name="contact_name" value="{{ hood.contact_name or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="contact_email">Contact Email</label>
+                <input type="email" id="contact_email" name="contact_email" value="{{ hood.contact_email or '' }}">
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+                <label for="manufacturer">Manufacturer</label>
+                <input type="text" id="manufacturer" name="manufacturer" value="{{ hood.manufacturer or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="model">Model</label>
+                <input type="text" id="model" name="model" value="{{ hood.model or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="serial_no">Serial Number</label>
+                <input type="text" id="serial_no" name="serial_no" value="{{ hood.serial_no or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="size">Size (ft)</label>
+                <input type="number" step="0.1" id="size" name="size" value="{{ hood.size or '' }}">
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+                <label for="hood_type">Hood Type</label>
+                <input type="text" id="hood_type" name="hood_type" value="{{ hood.hood_type or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="sash_type">Sash Type</label>
+                <input type="text" id="sash_type" name="sash_type" value="{{ hood.sash_type or '' }}">
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Changes</button>
+            <a href="{{ url_for('hoods.hood_detail', id=hood.id) }}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

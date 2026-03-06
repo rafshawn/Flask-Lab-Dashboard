@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-container widget">
+    <h2>Add New Fumehood</h2>
+    <form method="POST" action="{{ url_for('hoods.add_hood') }}" class="modern-form">
+        <div class="form-group">
+            <label for="hood_id">Hood ID</label>
+            <input type="text" id="hood_id" name="hood_id" required placeholder="e.g. FH-101">
+        </div>
+        <div class="form-group">
+            <label for="room_id">Select Room</label>
+            <select id="room_id" name="room_id" required>
+                {% for r in rooms %}
+                <option value="{{ r.id }}">{{ r.building_name }} - Rm {{ r.room_no }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="status">Current Status</label>
+            <select id="status" name="status">
+                <option value="Active">Active</option>
+                <option value="Maintenance">Maintenance</option>
+                <option value="Decommissioned">Decommissioned</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="faculty">Faculty</label>
+            <input type="text" id="faculty" name="faculty" placeholder="e.g. Science">
+        </div>
+        <div class="form-group">
+            <label for="dept">Department</label>
+            <input type="text" id="dept" name="dept" placeholder="e.g. Chemistry">
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+                <label for="manufacturer">Manufacturer</label>
+                <input type="text" id="manufacturer" name="manufacturer" placeholder="e.g. LabConco">
+            </div>
+            <div class="form-group">
+                <label for="model">Model</label>
+                <input type="text" id="model" name="model" placeholder="e.g. Protector">
+            </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+                <label for="hood_type">Hood Type</label>
+                <input type="text" id="hood_type" name="hood_type" placeholder="e.g. Standard">
+            </div>
+            <div class="form-group">
+                <label for="sash_type">Sash Type</label>
+                <input type="text" id="sash_type" name="sash_type" placeholder="e.g. Vertical">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="size">Size (ft)</label>
+            <input type="number" step="0.1" id="size" name="size" placeholder="e.g. 6.0">
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Fumehood</button>
+            <a href="{{ url_for('hoods.list_hoods') }}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ hood.hood_id }} - Certification</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; margin: 0; padding: 20px; color: #333; }
+        .wrapper { max-width: 800px; margin: 0 auto; border: 2px solid #333; padding: 30px; border-radius: 8px; }
+        .header { display: flex; justify-content: space-between; align-items:flex-start; margin-bottom: 2rem; border-bottom: 2px solid #ccc; padding-bottom: 1rem; }
+        .org-info { max-width: 300px; }
+        .org-logo { max-height: 80px; margin-bottom: 10px; }
+        .qr-code { text-align: center; }
+        .qr-code img { max-width: 120px; }
+        h1 { margin-top: 0; font-size: 24px; color: #10b981; }
+        h2 { font-size: 18px; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-block: 10px; }
+        th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }
+        th { width: 35%; background-color: #f9f9f9; }
+        .signatures { display: flex; justify-content: space-between; margin-top: 40px; }
+        .sig-box { width: 45%; border-top: 1px solid #333; padding-top: 5px; text-align: center; }
+        @media print {
+            body { padding: 0; }
+            .wrapper { border: none; padding: 0; }
+            button { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <button onclick="window.print()" style="position:fixed; top:20px; right:20px; padding:10px 15px; background:#10b981; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">🖨️ Print Certificate</button>
+
+    <div class="wrapper">
+        <div class="header">
+            <div class="org-info">
+                {% if org.logo_path %}
+                <img src="{{ org.logo_path }}" alt="Logo" class="org-logo">
+                {% else %}
+                <h1>{{ org.name }}</h1>
+                {% endif %}
+                <p style="margin:0 0 5px 0;">{{ org.address_1 }}<br>{{ org.city }}, {{ org.state }} {{ org.zip_code }}</p>
+                <p style="margin:0;">Building: {{ hood.room.floor.building.name }} - Floor: {{ hood.room.floor.name }} - Room: {{ hood.room.room_no }}</p>
+            </div>
+            <div class="qr-code">
+                {% if hood.qr_code_path %}
+                <img src="{{ url_for('static', filename=hood.qr_code_path) }}" alt="QR Code">
+                <p style="margin:5px 0 0 0; font-weight:bold;">SCAN FOR RECORD</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="border:none; margin:0; font-size:22px; color:#1f2937;">FUMEHOOD CERTIFICATION REPORT</h2>
+            <p style="font-size:16px; font-weight:bold; margin-top:5px;">Fumehood ID: {{ hood.hood_id }}</p>
+        </div>
+
+        <h2>Equipment Information</h2>
+        <table>
+            <tr><th>Manufacturer</th><td>{{ hood.manufacturer or 'N/A' }}</td></tr>
+            <tr><th>Model</th><td>{{ hood.model or 'N/A' }}</td></tr>
+            <tr><th>Serial Number</th><td>{{ hood.serial_no or 'N/A' }}</td></tr>
+            <tr><th>Type</th><td>{{ hood.hood_type or 'N/A' }} ({{ hood.size or 'N/A' }} ft)</td></tr>
+        </table>
+
+        {% set lt = hood.latest_test() %}
+        {% if lt %}
+        <h2>Test Results - Required Specifications</h2>
+        <table>
+            <tr><th>Date of Test</th><td>{{ lt.test_date }}</td></tr>
+            <tr><th>Overall Certification Status</th><td style="font-weight:bold; color: {% if lt.test_rating == 'Pass' %}#10b981{% else %}#ef4444{% endif %};">{{ lt.test_rating }}</td></tr>
+            <tr><th>Average Face Velocity (Full Open)</th><td>{{ lt.avg_face_velocity_full|default('N/A', true) }} fpm</td></tr>
+            <tr><th>Average Face Velocity (Half Open)</th><td>{{ lt.avg_face_velocity_half|default('N/A', true) }} fpm</td></tr>
+            <tr><th>Tri-Color Test (Design)</th><td>{{ lt.tri_color_design|default('N/A', true) }}</td></tr>
+            <tr><th>Tri-Color Test (Full Open)</th><td>{{ lt.tri_color_full|default('N/A', true) }}</td></tr>
+            <tr><th>Tri-Color Test (Walk By)</th><td>{{ lt.tri_color_walkby|default('N/A', true) }}</td></tr>
+        </table>
+
+        <h2>Signatures</h2>
+        <div class="signatures">
+            <div class="sig-box">
+                <p style="margin-bottom:40px; text-align:left;">Technician: {{ lt.technologist }}</p>
+                <p>Authorized Signature & Date</p>
+            </div>
+            <div class="sig-box">
+                <p style="margin-bottom:40px; text-align:left;">Next Certification Due: {{ hood.expiration_date()[:10] if hood.expiration_date() is string else hood.expiration_date() }}</p>
+                <p>Organization Representative Signature</p>
+            </div>
+        </div>
+        {% else %}
+        <p style="text-align:center; padding: 40px; color: #888;">No testing records found for this equipment.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>Test Detail: {{ test.hood.hood_id }} on {{ test.test_date }}</h1>
+    <div style="display:flex; gap:0.5rem;">
+        <a href="{{ url_for('hoods.hood_detail', id=test.hood_id) }}" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        <a href="{{ url_for('hoods.add_cycle', id=test.id) }}" class="btn-primary"><i class="fa-solid fa-plus"></i> Cycle</a>
+        <button type="button" onclick="openDeleteModal('{{ url_for('hoods.delete_test', id=test.id) }}', 'Are you sure you want to delete this Test record?')" class="btn-primary" style="background:#ef4444; border-color:#ef4444;"><i class="fa-solid fa-trash"></i> Delete Test</button>
+    </div>
+</div>
+
+<div class="widget" style="margin-bottom: 2rem;">
+    <h2>Test Summary</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem;">
+        <div>
+            <p><strong>Technologist:</strong> {{ test.technologist|default('-', true) }}</p>
+            <p><strong>Overall Rating:</strong>
+                {% if test.test_rating == 'Pass' %}
+                    <span class="badge badge-active">Pass</span>
+                {% else %}
+                    <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">Fail</span>
+                {% endif %}
+            </p>
+            <p><strong>Avg Face Vel (Full):</strong> {{ test.avg_face_velocity_full|default('-', true) }} fpm</p>
+            <p><strong>Avg Face Vel (Half):</strong> {{ test.avg_face_velocity_half|default('-', true) }} fpm</p>
+            <p><strong>Tri-Color (Design):</strong> {{ test.tri_color_design|default('-', true) }}</p>
+            <p><strong>Tri-Color (Full Open):</strong> {{ test.tri_color_full|default('-', true) }}</p>
+            <p><strong>Tri-Color (Walk By):</strong> {{ test.tri_color_walkby|default('-', true) }}</p>
+        </div>
+        <div>
+            <p><strong>Work Order:</strong> {{ test.work_order_no|default('-', true) }}</p>
+            <p><strong>Report No:</strong> {{ test.report_no|default('-', true) }}</p>
+            {% if test.test_media_path %}
+            <div style="margin-top: 1rem; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background: var(--surface-color);">
+                <strong style="color:var(--text-main);">Evidence Media:</strong>
+                <a href="{{ url_for('static', filename=test.test_media_path) }}" target="_blank" style="margin-left: 10px; color: var(--primary-color);">Open Full File</a><br/>
+                {% if test.test_media_path.lower().endswith('.mp4') or test.test_media_path.lower().endswith('.webm') %}
+                <video src="{{ url_for('static', filename=test.test_media_path) }}" controls style="max-width:100%; margin-top:10px; border-radius:4px; max-height: 200px; background: black;"></video>
+                {% else %}
+                <img src="{{ url_for('static', filename=test.test_media_path) }}" alt="Evidence" style="max-width:100%; margin-top:10px; border-radius:4px; max-height: 200px; object-fit: contain;">
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border-color);">
+        <p><strong>Comments:</strong><br/>{{ test.comments|default('None', true) }}</p>
+    </div>
+</div>
+
+<h2>Test Cycles</h2>
+<div class="table-container" style="margin-top: 1rem;">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Cycle #</th>
+                <th>Rating</th>
+                <th>Opening (H x W)</th>
+                <th>Face Velocity (FPM)</th>
+                <th>Cross H (FPM)</th>
+                <th>Cross V (FPM)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cycle in test.cycles %}
+            <tr>
+                <td>{{ cycle.cycle_index }}</td>
+                <td>
+                    {% if cycle.cycle_rating == 'Pass' %}
+                        <span class="text-success">Pass</span>
+                    {% elif cycle.cycle_rating == 'Fail' %}
+                        <span class="text-danger">Fail</span>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>{{ cycle.opening_height|default('-', true) }}" x {{ cycle.opening_width|default('-', true) }}"</td>
+                <td><strong>{{ cycle.face_v_avg|default('-', true) }}</strong></td>
+                <td>{{ cycle.cross_h_avg|default('-', true) }}</td>
+                <td>{{ cycle.cross_v_avg|default('-', true) }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="text-center">No cycles recorded for this test.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div style="margin-top: 2rem;">
+    <a href="{{ url_for('hoods.hood_detail', id=test.hood_id) }}" class="btn-secondary">Back to Hood</a>
+</div>
+{% endblock %}

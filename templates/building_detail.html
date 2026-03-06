@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- DataTables CSS & JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2>{{ building.name }}</h2>
+    <div style="display:flex; gap:0.5rem;">
+        <a href="{{ url_for('organizations.org_detail', id=building.org_id) }}" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        <a href="{{ url_for('organizations.edit_building', id=building.id) }}" class="btn-primary" style="background:var(--primary-color); border-color:var(--primary-color);"><i class="fa-solid fa-pencil"></i> Edit Building</a>
+        <button type="button" onclick="openDeleteModal('{{ url_for('organizations.delete_building', id=building.id) }}', 'WARNING: Are you sure you want to delete this Building? All Rooms and Fumehoods inside will be permanently deleted.')" class="btn-primary" style="background:#ef4444; border-color:#ef4444;"><i class="fa-solid fa-trash"></i> Delete Building</button>
+    </div>
+</div>
+
+<div class="widget-container" style="margin-bottom: 2rem;">
+    <div class="widget">
+        <h2>Building Information</h2>
+        <ul class="summary-list">
+            <li><strong>Organization:</strong> {{ building.organization.name }}</li>
+            <li><strong>Emergency Phone:</strong> {{ building.emergency_phone|default('-', true) }}</li>
+            <li><strong>Maintenance Phone:</strong> {{ building.maintenance_phone|default('-', true) }}</li>
+            <li><strong>Maintenance Email:</strong> {{ building.maintenance_email|default('-', true) }}</li>
+            <li><strong>What3Words:</strong> {{ building.what3words|default('-', true) }}</li>
+        </ul>
+    </div>
+</div>
+
+<h2>Rooms</h2>
+<div class="apex-table-card" style="margin-top: 1rem; margin-bottom: 3rem;">
+    <table id="roomsTable" class="table align-middle">
+        <thead>
+            <tr>
+                <th>Room No</th>
+                <th>Floor</th>
+                <th>Status</th>
+                <th>Fumehoods</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for floor in building.floors %}
+                {% for room in floor.rooms %}
+                <tr>
+                    <td style="font-weight:600;">
+                        <a href="{{ url_for('organizations.room_detail', id=room.id) }}" style="color:var(--primary-color); text-decoration:none;">{{ room.room_no }}</a>
+                    </td>
+                    <td>{{ floor.name }}</td>
+                    <td>
+                        {% if room.is_active %}
+                            <span class="badge badge-success">Active</span>
+                        {% else %}
+                            <span class="badge badge-error">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ room.hoods|length }}</td>
+                    <td class="text-end">
+                        <div class="action-buttons">
+                            <a href="{{ url_for('organizations.edit_room', id=room.id) }}" class="btn-icon" title="Edit Room">
+                                <i class="fa-solid fa-pencil"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<h2>Fumehoods</h2>
+<div class="apex-table-card" style="margin-top: 1rem; margin-bottom: 3rem;">
+    <table id="hoodsTable" class="table align-middle">
+        <thead>
+            <tr>
+                <th>Hood ID</th>
+                <th>Room No</th>
+                <th>Dept</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for floor in building.floors %}
+                {% for room in floor.rooms %}
+                    {% for hood in room.hoods %}
+                    <tr>
+                        <td style="font-weight:600;">
+                            <a href="{{ url_for('hoods.hood_detail', id=hood.id) }}" style="color:var(--primary-color); text-decoration:none;">{{ hood.hood_id }}</a>
+                        </td>
+                        <td>{{ room.room_no }}</td>
+                        <td>{{ hood.dept|default('-', true) }}</td>
+                        <td><span class="badge badge-{{ hood.status|lower }}">{{ hood.status }}</span></td>
+                        <td class="text-end">
+                            <div class="action-buttons">
+                                <a href="{{ url_for('hoods.edit_hood', id=hood.id) }}" class="btn-icon" title="Edit Hood">
+                                    <i class="fa-solid fa-pencil"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($('#roomsTable tbody tr td').length > 1) {
+            $('#roomsTable').DataTable({
+                responsive: true,
+                pageLength: 10,
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search rooms..."
+                },
+                dom: '<"table-top"f>rt<"table-bottom"ip>',
+                columnDefs: [
+                    { orderable: false, targets: 4 }
+                ]
+            });
+        }
+
+        if ($('#hoodsTable tbody tr td').length > 1) {
+            $('#hoodsTable').DataTable({
+                responsive: true,
+                pageLength: 10,
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search hoods..."
+                },
+                dom: '<"table-top"f>rt<"table-bottom"ip>',
+                columnDefs: [
+                    { orderable: false, targets: 4 }
+                ]
+            });
+        }
+    });
+</script>
+{% endblock %}
