@@ -2,8 +2,6 @@
 {% block content %}
 <!-- DataTables CSS & JS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
 <div class="page-header">
@@ -35,8 +33,8 @@
 </div>
 
 <h2>Rooms</h2>
-<div class="apex-table-card mt-4 mb-8">
-    <table id="roomsTable" class="table align-middle">
+<div class="rounded-md border border-border overflow-hidden mt-4 mb-8">
+    <table id="roomsTable" class="data-table w-100 table align-middle">
         <thead>
             <tr>
                 <th>Room No</th>
@@ -77,8 +75,8 @@
 </div>
 
 <h2>Fumehoods</h2>
-<div class="apex-table-card mt-4 mb-8">
-    <table id="hoodsTable" class="table align-middle">
+<div class="rounded-md border border-border overflow-hidden mt-4 mb-8">
+    <table id="hoodsTable" class="data-table w-100 table align-middle">
         <thead>
             <tr>
                 <th>Hood ID</th>
@@ -121,10 +119,12 @@
                 responsive: true,
                 pageLength: 10,
                 language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search rooms..."
+                    search: "",
+                    searchPlaceholder: "Filter rooms...",
+                    info: "Showing _START_ to _END_ of _TOTAL_ row(s)",
+                    infoEmpty: "No rows found"
                 },
-                dom: '<"table-top"f>rt<"table-bottom"ip>',
+                dom: '<"d-flex align-items-center justify-content-between p-4 mb-2"f>rt<"table-bottom"ip>',
                 columnDefs: [
                     { orderable: false, targets: 4 }
                 ]
@@ -136,10 +136,12 @@
                 responsive: true,
                 pageLength: 10,
                 language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search hoods..."
+                    search: "",
+                    searchPlaceholder: "Filter hoods...",
+                    info: "Showing _START_ to _END_ of _TOTAL_ row(s)",
+                    infoEmpty: "No rows found"
                 },
-                dom: '<"table-top"f>rt<"table-bottom"ip>',
+                dom: '<"d-flex align-items-center justify-content-between p-4 mb-2"f>rt<"table-bottom"ip>',
                 columnDefs: [
                     { orderable: false, targets: 4 }
                 ]

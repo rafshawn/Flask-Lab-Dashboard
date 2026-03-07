@@ -16,47 +16,44 @@
 </div>
 {% else %}
 
-<div class="page-header">
-    <h2>
-        {% if current_filter == 'Overdue' %}Overdue Hoods
-        {% elif current_filter == 'Due1Week' %}Due in 7 Days
-        {% elif current_filter == 'Due2Months' %}Due in 2 Months
-        {% elif current_filter == 'ActionTaken' %}Action Required
-        {% elif current_filter == 'ActiveValid' %}Active & Valid Hoods
-        {% elif current_filter == 'Maintenance' %}Hoods in Maintenance
-        {% else %}All Fumehoods{% endif %}
-    </h2>
-    <div class="d-flex gap-2">
-        <button
-            class="btn-secondary"
-            onclick="openConfirmModal('Email reporting will be enabled in a future update once the SMTP server is configured.', function(){}, 'OK', '#4b5563')"
-            title="Email Report (Coming Soon)"
-        >
-            <i class="fa-solid fa-envelope"></i> Email Report
-        </button>
-        <a
-            href="{{ url_for('hoods.print_hoods', filter=current_filter) }}"
-            target="_blank"
-            class="btn-accent"
-        >
-            <i class="fa-solid fa-file-pdf"></i> Generate Report
-        </a>
-        <a href="{{ url_for('hoods.add_hood') }}" class="btn-primary">
-            <i class="fa-solid fa-plus"></i> New Hood
-        </a>
+<div class="table-top mb-4">
+    <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="d-flex align-items-center gap-2" id="toolbar-filters">
+            <!-- Search Input -->
+            <input type="text" id="customSearch" class="form-control input-sm" placeholder="Filter records..." style="width: 250px;">
+
+            <!-- Faceted Filters -->
+            <button class="btn-outline-dashed" onclick="filterTable('Active')" id="filter-active">
+                <i class="fa-solid fa-circle-check text-success"></i> Active
+            </button>
+            <button class="btn-outline-dashed" onclick="filterTable('Maintenance')" id="filter-maint">
+                <i class="fa-solid fa-wrench text-warning"></i> Maintenance
+            </button>
+            <button class="btn-outline-dashed" onclick="filterCondition('EXPIRED')" id="filter-expired">
+                <i class="fa-solid fa-triangle-exclamation text-danger"></i> Expired
+            </button>
+            <button class="btn-outline-dashed" onclick="clearFilters()" id="filter-clear" style="display:none;">
+                <i class="fa-solid fa-xmark"></i> Clear Filters
+            </button>
+        </div>
+
+        <!-- Actions -->
+        <div class="d-flex align-items-center gap-2" id="toolbar-actions">
+            <button class="btn-outline-dashed" onclick="openConfirmModal('Email reporting will be enabled in a future update once the SMTP server is configured.', function(){}, 'OK', '#4b5563')" title="Email Report (Coming Soon)">
+                <i class="fa-solid fa-envelope"></i>
+            </button>
+            <a href="{{ url_for('hoods.print_hoods', filter=current_filter) }}" target="_blank" class="btn-outline-dashed">
+                <i class="fa-solid fa-file-pdf"></i> Report
+            </a>
+            <a href="{{ url_for('hoods.add_hood') }}" class="btn-primary input-sm d-flex align-items-center gap-2">
+                <i class="fa-solid fa-plus"></i> New Hood
+            </a>
+        </div>
     </div>
 </div>
 
-<!-- Status Pill Filters -->
-<div class="filter-chips">
-    <button class="chip active" onclick="filterTable('')">All</button>
-    <button class="chip" onclick="filterTable('Active')">Active</button>
-    <button class="chip" onclick="filterTable('Maintenance')">Maintenance</button>
-    <button class="chip" onclick="filterCondition('EXPIRED')">Expired</button>
-</div>
-
-<div class="apex-table-card">
-    <table id="hoodsTable" class="table align-middle">
+<div class="rounded-md border border-border overflow-hidden mb-8">
+    <table id="hoodsTable" class="data-table w-100 table align-middle">
         <thead>
             <tr>
                 <th>Hood ID</th>
@@ -107,40 +104,71 @@
 <script>
     let dtTable;
     $(document).ready(function() {
-        dtTable = $('#hoodsTable').DataTable({
-            responsive: true,
-            pageLength: 10,
-            language: {
-                search: "_INPUT_",
-                searchPlaceholder: "Search records..."
-            },
-            dom: '<"table-top"f>rt<"table-bottom"ip>',
-            columnDefs: [
-                { orderable: false, targets: 7 } // Disable sorting on Actions
-            ]
-        });
-
-        // Setup filter chip active state toggle
-        $('.chip').click(function() {
-            $('.chip').removeClass('active');
-            $(this).addClass('active');
-        });
+        if (typeof $.fn.DataTable !== 'undefined') {
+            dtTable = $('#hoodsTable').DataTable({
+                responsive: true,
+                pageLength: 10,
+                language: {
+                    search: "",
+                    searchPlaceholder: "Filter records...",
+                    info: "Showing _START_ to _END_ of _TOTAL_ row(s)",
+                    infoEmpty: "No rows found"
+                },
+                dom: '<"d-flex align-items-center justify-content-between p-4 mb-2">rt<"table-bottom"ip>',
+                columnDefs: [
+                    { orderable: false, targets: 7 } // Disable sorting on Actions
+                ],
+                initComplete: function() {
+                    let api = this.api();
+                    $('#customSearch').on('keyup', function() {
+                        api.search(this.value).draw();
+                    });
+                }
+            });
+        }
     });
 
-    function filterTable(val) {
-        // Clear any previous individual column searches
-        dtTable.columns().search('');
-        // Search globally by status string
-        if (val) {
-             dtTable.column(3).search('\\b' + val + '\\b', true, false).draw(); // regex exact match
+    function updateFilterButtons(activeId) {
+        $('.btn-outline-dashed').removeClass('active').css({
+            'background-color': 'transparent',
+            'color': 'var(--text-main)'
+        });
+
+        if (activeId) {
+            $('#filter-' + activeId).css({
+                'background-color': 'var(--input)',
+                'border-color': 'var(--primary)'
+            });
+            $('#filter-clear').show();
         } else {
-             dtTable.search('').draw(); // Clear all
+            $('#filter-clear').hide();
+        }
+    }
+
+    function clearFilters() {
+        if (!dtTable) return;
+        dtTable.search('').columns().search('').draw();
+        $('#customSearch').val('');
+        updateFilterButtons(null);
+    }
+
+    function filterTable(val) {
+        if (!dtTable) return;
+        dtTable.column(6).search(''); // Clear Condition filter
+        if (val) {
+             dtTable.column(3).search(val).draw();
+             updateFilterButtons(val === 'Active' ? 'active' : 'maint');
+        } else {
+             dtTable.column(3).search('').draw();
+             updateFilterButtons(null);
         }
     }
 
     function filterCondition(val) {
-        dtTable.columns().search('');
+        if (!dtTable) return;
+        dtTable.column(3).search(''); // Clear Status filter
         dtTable.column(6).search(val).draw();
+        updateFilterButtons('expired');
     }
 </script>
 {% endif %}

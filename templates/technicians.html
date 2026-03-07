@@ -6,8 +6,8 @@
 
 <!-- Technicians Table -->
 <div class="widget" style="margin-bottom: 2rem;">
-    <div class="apex-table-card">
-        <table class="table align-middle" id="technicians-table">
+    <div class="rounded-md border border-border overflow-hidden mt-4">
+        <table class="data-table w-100 table align-middle" id="technicians-table">
             <thead>
                 <tr>
                     <th>Technician</th>
@@ -100,7 +100,8 @@
                 info: false,
                 searching: true,
                 order: [[0, 'asc']],
-                language: { search: "", searchPlaceholder: "Search technicians..." }
+                language: { search: "", searchPlaceholder: "Filter technicians..." },
+                dom: '<"d-flex align-items-center justify-content-between p-4 mb-2"f>rt<"table-bottom"ip>',
             });
         });
     }

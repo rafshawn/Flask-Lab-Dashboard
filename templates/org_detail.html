@@ -2,8 +2,6 @@
 {% block content %}
 <!-- DataTables CSS & JS (with Buttons for Export) -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
 <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
@@ -34,8 +32,8 @@
 </div>
 
 <h2>Buildings</h2>
-<div class="apex-table-card" style="margin-top: 1rem; margin-bottom: 3rem;">
-    <table id="buildingsTable" class="table align-middle">
+<div class="rounded-md border border-border overflow-hidden mt-4 mb-8">
+    <table id="buildingsTable" class="data-table w-100 table align-middle">
         <thead>
             <tr>
                 <th>Building Name</th>
@@ -83,10 +81,12 @@
                 responsive: true,
                 pageLength: 10,
                 language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search buildings..."
+                    search: "",
+                    searchPlaceholder: "Filter buildings...",
+                    info: "Showing _START_ to _END_ of _TOTAL_ row(s)",
+                    infoEmpty: "No rows found"
                 },
-                dom: '<"table-top"f>rt<"table-bottom"ip>',
+                dom: '<"d-flex align-items-center justify-content-between p-4 mb-2"f>rt<"table-bottom"ip>',
                 columnDefs: [
                     { orderable: false, targets: 4 }
                 ]
