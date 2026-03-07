@@ -75,6 +75,73 @@
             {% endfor %}
         </tbody>
     </table>
+    {% elif report_type == 'room_detail' %}
+    <p><strong>Building:</strong> {{ room.building_name }}</p>
+    <p><strong>Room:</strong> {{ room.room_no }}</p>
+    <p><strong>Fumehoods:</strong> {{ room.hoods|length }}</p>
+
+    <h2>Fumehoods in Room</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Hood ID</th>
+                <th>Status</th>
+                <th>Make/Model</th>
+                <th>Size</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for hood in room.hoods %}
+            <tr>
+                <td>{{ hood.hood_id }}</td>
+                <td>{{ hood.status }}</td>
+                <td>{{ hood.manufacturer|default('-', true) }} {{ hood.model|default('', true) }}</td>
+                <td>{{ hood.size|default('-', true) }} ft</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4">No hoods in this room.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% elif report_type == 'test_detail' %}
+    <p><strong>Hood:</strong> {{ test.hood.hood_id }}</p>
+    <p><strong>Test Date:</strong> {{ test.test_date }}</p>
+    <p><strong>Technologist:</strong> {{ test.technologist|default('-', true) }}</p>
+    <p><strong>Overall Rating:</strong> {{ test.test_rating }}</p>
+    <p><strong>Work Order:</strong> {{ test.work_order_no|default('-', true) }}</p>
+    <p><strong>Report No:</strong> {{ test.report_no|default('-', true) }}</p>
+    <p><strong>Avg Face Vel (Full):</strong> {{ test.avg_face_velocity_full|default('-', true) }} fpm</p>
+    <p><strong>Avg Face Vel (Half):</strong> {{ test.avg_face_velocity_half|default('-', true) }} fpm</p>
+    <p><strong>Comments:</strong> {{ test.comments|default('None', true) }}</p>
+
+    <h2>Test Cycles</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Cycle #</th>
+                <th>Rating</th>
+                <th>Opening (H x W)</th>
+                <th>Face Velocity (FPM)</th>
+                <th>Cross H (FPM)</th>
+                <th>Cross V (FPM)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cycle in test.cycles %}
+            <tr>
+                <td>{{ cycle.cycle_index }}</td>
+                <td>{{ cycle.cycle_rating|default('-', true) }}</td>
+                <td>{{ cycle.opening_height|default('-', true) }}" x {{ cycle.opening_width|default('-', true) }}"</td>
+                <td>{{ cycle.face_v_avg|default('-', true) }}</td>
+                <td>{{ cycle.cross_h_avg|default('-', true) }}</td>
+                <td>{{ cycle.cross_v_avg|default('-', true) }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6">No cycles recorded.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
     {% endif %}
 
     <div style="margin-top: 3rem; font-size: 0.9em; color: #666;">

@@ -321,6 +321,13 @@ def print_hood_detail(id):
     return render_template('print_report.html', title=f"Fumehood Detail: {hood.hood_id}", hood=hood, report_type="hood_detail")
 
 
+@hoods_bp.route('/reports/tests/<int:id>')
+def print_test_report(id):
+    test = HoodTest.query.get_or_404(id)
+    title = f"Test Report: {test.hood.hood_id} on {test.test_date}"
+    return render_template('print_report.html', title=title, test=test, report_type="test_detail")
+
+
 @hoods_bp.route('/certificate/<int:id>')
 def view_certificate(id):
     hood = Fumehood.query.get_or_404(id)

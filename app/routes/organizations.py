@@ -193,3 +193,10 @@ def edit_room(id):
 
     floors = Floor.query.join(Building).filter(Building.org_id == org_id).all() if org_id else []
     return render_template('edit_room.html', room=room, floors=floors)
+
+
+@organizations_bp.route('/reports/rooms/<int:id>')
+def print_room_report(id):
+    room = Room.query.get_or_404(id)
+    title = f"Room Report: {room.building_name} - {room.room_no}"
+    return render_template('print_report.html', title=title, room=room, report_type="room_detail")

@@ -5,6 +5,14 @@ from app.models import Organization
 def get_current_org_id():
     """Get the current organization ID from the session, or default to the first org."""
     org_id = session.get('org_id')
+
+    if org_id:
+        # Verify the org actually exists in the database
+        org = Organization.query.get(org_id)
+        if not org:
+            session.pop('org_id', None)
+            org_id = None
+
     if not org_id:
         org = Organization.query.first()
         if org:

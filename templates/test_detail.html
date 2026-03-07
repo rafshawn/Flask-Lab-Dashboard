@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="page-header">
-    <h1>Test Detail: {{ test.hood.hood_id }} on {{ test.test_date }}</h1>
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div style="display:flex; align-items:center; gap:1rem;">
+        <a href="{{ url_for('hoods.hood_detail', id=test.hood_id) }}" class="btn-icon" title="Back to Hood" style="color:var(--text-muted);">
+            <i class="fa-solid fa-chevron-left"></i>
+        </a>
+        <h2 style="margin:0;">Test Detail: {{ test.hood.hood_id }} on {{ test.test_date }}</h2>
+    </div>
     <div class="d-flex gap-2">
-        <a href="{{ url_for('hoods.hood_detail', id=test.hood_id) }}" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        <a href="{{ url_for('hoods.print_test_report', id=test.id) }}" target="_blank" class="btn-outline-dashed">
+            <i class="fa-solid fa-file-pdf"></i> Report
+        </a>
         <a href="{{ url_for('hoods.add_cycle', id=test.id) }}" class="btn-primary"><i class="fa-solid fa-plus"></i> Cycle</a>
         <button type="button" onclick="openeventModal('{{ url_for('hoods.delete_test', id=test.id) }}', 'Are you sure you want to delete this Test record?')" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Test</button>
     </div>
@@ -49,8 +56,8 @@
 </div>
 
 <h2>Test Cycles</h2>
-<div class="table-container mt-4">
-    <table class="data-table">
+<div class="rounded-md border border-border mt-4" style="overflow-x:auto;">
+    <table id="cyclesTable" class="data-table w-100 table align-middle">
         <thead>
             <tr>
                 <th>Cycle #</th>
@@ -86,7 +93,24 @@
     </table>
 </div>
 
-<div class="mt-8">
-    <a href="{{ url_for('hoods.hood_detail', id=test.hood_id) }}" class="btn-secondary">Back to Hood</a>
-</div>
+<script>
+    $(document).ready(function() {
+        if ($('#cyclesTable tbody tr td').length > 1) {
+            $('#cyclesTable').DataTable({
+                responsive: true,
+                pageLength: 10,
+                language: {
+                    search: "",
+                    searchPlaceholder: "Filter cycles...",
+                    info: "Showing _START_ to _END_ of _TOTAL_ row(s)",
+                    infoEmpty: "No rows found"
+                },
+                dom: '<"d-flex align-items-center justify-content-between p-4 mb-2"f>rt<"table-bottom"ip>',
+                columnDefs: [
+                    { orderSequence: ['asc', 'desc', ''], targets: '_all' }
+                ]
+            });
+        }
+    });
+</script>
 {% endblock %}
