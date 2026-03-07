@@ -31,9 +31,9 @@
             <p><strong>Work Order:</strong> {{ test.work_order_no|default('-', true) }}</p>
             <p><strong>Report No:</strong> {{ test.report_no|default('-', true) }}</p>
             {% if test.test_media_path %}
-            <div style="margin-top: 1rem; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background: var(--surface-color);">
+            <div style="margin-top: 1rem; border: 1px solid var(--border); border-radius: 8px; padding: 10px; background: var(--input);">
                 <strong style="color:var(--text-main);">Evidence Media:</strong>
-                <a href="{{ url_for('static', filename=test.test_media_path) }}" target="_blank" style="margin-left: 10px; color: var(--primary-color);">Open Full File</a><br/>
+                <a href="{{ url_for('static', filename=test.test_media_path) }}" target="_blank" style="margin-left: 10px; color: var(--primary);">Open Full File</a><br/>
                 {% if test.test_media_path.lower().endswith('.mp4') or test.test_media_path.lower().endswith('.webm') %}
                 <video src="{{ url_for('static', filename=test.test_media_path) }}" controls style="max-width:100%; margin-top:10px; border-radius:4px; max-height: 200px; background: black;"></video>
                 {% else %}
@@ -43,7 +43,7 @@
             {% endif %}
         </div>
     </div>
-    <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border-color);">
+    <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
         <p><strong>Comments:</strong><br/>{{ test.comments|default('None', true) }}</p>
     </div>
 </div>

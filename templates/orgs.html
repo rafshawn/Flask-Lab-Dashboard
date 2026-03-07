@@ -29,7 +29,7 @@
                     {% endif %}
                 </td>
                 <td style="font-weight:600;">
-                    <a href="{{ url_for('organizations.org_detail', id=org.id) }}" style="color:var(--primary-color); text-decoration:none;">{{ org.name }}</a>
+                    <a href="{{ url_for('organizations.org_detail', id=org.id) }}" style="color:var(--primary); text-decoration:none;">{{ org.name }}</a>
                 </td>
                 <td>{{ org.city }}, {{ org.state }}</td>
                 <td>{{ org.buildings|length }} buildings</td>

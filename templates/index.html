@@ -2,17 +2,17 @@
 
 {% block content %}
 {% if empty_state %}
-<div class="empty-state" style="text-align: center; padding: 4rem 2rem; background: var(--surface-color); border: 1px dashed var(--border-color); border-radius: 12px; margin-top: 2rem;">
+<div class="empty-state">
     <i class="fa-solid fa-sitemap" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1.5rem;"></i>
     <h2>Welcome to O2 Fumehoods!</h2>
     <p style="color: var(--text-muted); max-width: 500px; margin: 1rem auto; line-height: 1.6;">
         It looks like you don't have any organizations set up yet. To get started, you'll need to create an organization to manage your buildings, rooms, and fumehoods.
     </p>
-    <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 1rem;">
-        <a href="{{ url_for('organizations.add_org') }}" class="btn-primary" style="font-size: 1.1rem; padding: 0.75rem 1.5rem;">
+    <div class="btn-wrapper">
+        <a href="{{ url_for('organizations.add_org') }}" class="btn-primary">
             <i class="fa-solid fa-plus"></i> Add Organization
         </a>
-        <button onclick="seedDatabase()" class="btn-secondary" style="font-size: 1.1rem; padding: 0.75rem 1.5rem;">
+        <button onclick="seedDatabase()" class="btn-secondary">
             <i class="fa-solid fa-database"></i> Seed Dummy Data
         </button>
     </div>
@@ -28,16 +28,13 @@
                     .then(data => { window.location.reload(); });
             },
             'Yes, Seed Data',
-            'var(--primary-color)'
+            'var(--primary)'
         );
     }
 </script>
 {% else %}
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
     <h2>Dashboard Overview</h2>
-    <button onclick="seedDatabase()" class="btn-secondary" style="background-color: var(--primary-color); border: none; color: white; display: flex; align-items: center; gap: 0.5rem;">
-        <i class="fa-solid fa-database"></i> Seed Dummy Data
-    </button>
 </div>
 
 <!-- Metrics Overview -->
@@ -51,7 +48,7 @@
             </div>
         </div>
     </a>
-    <a href="{{ url_for('hoods.list_hoods', filter='ActiveValid') }}" class="metric-card" style="text-decoration: none; color: inherit; display: block;">
+    <a href="{{ url_for('hoods.list_hoods', filter='ActiveValid') }}" class="metric-card">
         <div class="metric-title">Active & Valid</div>
         <div class="metric-value">
             {{ status_chart.data[0] }}
@@ -60,7 +57,7 @@
             </div>
         </div>
     </a>
-    <a href="{{ url_for('hoods.list_hoods', filter='Overdue') }}" class="metric-card" style="text-decoration: none; color: inherit; display: block;">
+    <a href="{{ url_for('hoods.list_hoods', filter='Overdue') }}" class="metric-card">
         <div class="metric-title">Expired Certifications</div>
         <div class="metric-value">
             {{ status_chart.data[1] }}
@@ -69,7 +66,7 @@
             </div>
         </div>
     </a>
-    <a href="{{ url_for('hoods.list_hoods', filter='Maintenance') }}" class="metric-card" style="text-decoration: none; color: inherit; display: block;">
+    <a href="{{ url_for('hoods.list_hoods', filter='Maintenance') }}" class="metric-card">
         <div class="metric-title">In Maintenance</div>
         <div class="metric-value">
             {{ status_chart.data[2] }}
@@ -230,7 +227,7 @@
                     .then(data => { window.location.reload(); });
             },
             'Yes, Seed Data',
-            'var(--primary-color)'
+            'var(--primary)'
         );
     }
 </script>

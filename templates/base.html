@@ -6,8 +6,6 @@
     <title>O2 Fumehoods</title>
     <!-- Main CSS (imports all modular stylesheets) -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=3) }}">
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -17,7 +15,7 @@
         <!-- Sidebar Navigation -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <i class="fa-solid fa-flask" style="color: var(--primary-color);"></i>
+                <i class="fa-solid fa-flask" style="color: var(--primary);"></i>
                 <span class="logo-text">O2 Fumehoods</span>
             </div>
             <div class="sidebar-action">
@@ -26,6 +24,8 @@
                 </a>
             </div>
             <nav class="sidebar-nav">
+                <div class="sidebar-text">Home</div>
+
                 <a href="{{ url_for('dashboard.dashboard') }}" class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
                     <i class="fa-solid fa-chart-line"></i> <span>Dashboard</span>
                 </a>
@@ -39,7 +39,7 @@
                     <i class="fa-solid fa-users"></i> <span>Technicians</span>
                 </a>
 
-                <div class="sidebar-section-title" style="margin: 1.5rem 0 0.5rem 1.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Reports</div>
+                <div class="sidebar-text">Tables</div>
 
                 <a href="{{ url_for('hoods.list_hoods', filter='Overdue') }}" class="nav-item {% if 'hood' in request.endpoint and request.args.get('filter') == 'Overdue' %}active{% endif %}">
                     <i class="fa-solid fa-file-invoice"></i> <span style="font-size: 0.9em;">Overdue Hoods</span>
@@ -54,10 +54,13 @@
                     <i class="fa-solid fa-clipboard-list"></i> <span style="font-size: 0.9em;">Action Required</span>
                 </a>
 
-                <div style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 0.5rem; width: 80%; margin-left:10%;"></div>
+                <div style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 0.5rem; width: 80%; margin-left:10%;"></div>
 
                 <a href="{{ url_for('settings.org_settings') }}" class="nav-item {% if request.endpoint == 'settings.org_settings' %}active{% endif %}">
                     <i class="fa-solid fa-gear"></i> <span>Settings</span>
+                </a>
+                <a class="nav-item">
+                    <i class="fa-regular fa-circle-question"></i> <span>Help</span>
                 </a>
             </nav>
             <div class="sidebar-footer">
@@ -89,9 +92,9 @@
 
                     <!-- Organization Switcher -->
                     {% if all_orgs %}
-                    <div class="org-switcher" style="padding-right: 1.5rem; border-right: 1px solid var(--border-color);">
+                    <div class="org-switcher" style="padding-right: 1.5rem; border-right: 1px solid var(--border);">
                         <form action="{{ url_for('dashboard.set_org') }}" method="POST" style="margin: 0;">
-                            <select name="org_id" class="form-select" onchange="this.form.submit()" style="background-color: var(--surface-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.35rem 2rem 0.35rem 0.75rem; font-size: 0.875rem; font-weight: 500; cursor: pointer;">
+                            <select name="org_id" class="form-select" onchange="this.form.submit()" style="background-color: var(--input); color: var(--text-main); border: 1px solid var(--border); border-radius: 6px; padding: 0.35rem 2rem 0.35rem 0.75rem; font-size: 0.875rem; font-weight: 500; cursor: pointer;">
                                 {% for org in all_orgs %}
                                 <option value="{{ org.id }}" {% if current_org and current_org.id == org.id %}selected{% endif %}>{{ org.name }}</option>
                                 {% endfor %}
@@ -119,7 +122,7 @@
                   {% if messages %}
                     <div class="flash-messages" style="margin-bottom: 2rem;">
                       {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}" style="padding: 1rem; border-radius: 6px; background: {% if category == 'error' %}var(--danger-light){% else %}var(--primary-light){% endif %}; color: {% if category == 'error' %}var(--danger){% else %}var(--primary-color){% endif %}; border-left: 4px solid {% if category == 'error' %}var(--danger){% else %}var(--primary-color){% endif %};">
+                        <div class="alert alert-{{ category }}" style="padding: 1rem; border-radius: 6px; background: {% if category == 'error' %}var(--danger-light){% else %}var(--primary-light){% endif %}; color: {% if category == 'error' %}var(--danger){% else %}var(--primary){% endif %}; border-left: 4px solid {% if category == 'error' %}var(--danger){% else %}var(--primary){% endif %};">
                             <i class="fa-solid {% if category == 'error' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}" style="margin-right:0.5rem;"></i>
                             {{ message }}
                         </div>
@@ -178,8 +181,8 @@
             const actionBtn = document.getElementById('modal-action-btn');
             actionBtn.style.display = 'inline-block';
             actionBtn.textContent = btnText || 'Confirm';
-            actionBtn.style.background = btnColor || 'var(--primary-color)';
-            actionBtn.style.borderColor = btnColor || 'var(--primary-color)';
+            actionBtn.style.background = btnColor || 'var(--primary)';
+            actionBtn.style.borderColor = btnColor || 'var(--primary)';
             actionBtn.onclick = function() { closeDeleteModal(); callback(); };
             document.getElementById('modal-title').textContent = 'Confirm Action';
             deleteMessage.textContent = message;

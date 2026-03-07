@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-    <h2><i class="fa-solid fa-gear" style="color:var(--primary-color);"></i> Organization Settings</h2>
+    <h2><i class="fa-solid fa-gear" style="color:var(--primary);"></i> Organization Settings</h2>
 </div>
 
 <!-- General Preferences -->
@@ -9,12 +9,12 @@
     <h2>General Preferences</h2>
     <form method="POST" action="{{ url_for('settings.org_settings') }}">
         <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem;">
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: var(--background); border-radius: 8px; border: 1px solid var(--border-color);">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: var(--background); border-radius: 8px; border: 1px solid var(--border);">
                 <div>
                     <strong>Default Face Velocity (FPM)</strong>
                     <p style="color: var(--text-muted); margin: 0.25rem 0 0; font-size: 0.9rem;">The default design spec face velocity for new fumehoods (e.g. 100 FPM standard, 80 FPM for Core Science).</p>
                 </div>
-                <input type="number" name="face_velocity_default" value="{{ settings.face_velocity_default if settings else 100 }}" step="0.1" min="0" style="width: 100px; background: var(--surface-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.5rem; text-align: center; font-size: 1rem; margin-left: 1rem;">
+                <input type="number" name="face_velocity_default" value="{{ settings.face_velocity_default if settings else 100 }}" step="0.1" min="0" style="width: 100px; background: var(--input); color: var(--text-main); border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem; text-align: center; font-size: 1rem; margin-left: 1rem;">
             </div>
         </div>
         <div style="margin-top: 1.5rem; text-align: right;">
@@ -66,7 +66,7 @@
                         <div class="action-buttons" style="display:flex; gap:0.25rem; justify-content:flex-end;">
                             <form method="POST" action="{{ url_for('settings.toggle_custom_test_type', id=ct.id) }}" style="margin:0;">
                                 <button type="submit" class="btn-icon" title="{{ 'Deactivate' if ct.is_active else 'Activate' }}">
-                                    <i class="fa-solid {{ 'fa-toggle-on' if ct.is_active else 'fa-toggle-off' }}" style="color: {{ 'var(--primary-color)' if ct.is_active else 'var(--text-muted)' }};"></i>
+                                    <i class="fa-solid {{ 'fa-toggle-on' if ct.is_active else 'fa-toggle-off' }}" style="color: {{ 'var(--primary)' if ct.is_active else 'var(--text-muted)' }};"></i>
                                 </button>
                             </form>
                             <button type="button" onclick="openDeleteModal('{{ url_for('settings.delete_custom_test_type', id=ct.id) }}', 'Delete custom test type: {{ ct.name }}? All saved values for this test on fumehoods will also be removed.')" class="btn-icon" title="Delete" style="color: var(--danger);">
@@ -84,8 +84,8 @@
 
     <!-- Add New Custom Test Type -->
     <form method="POST" action="{{ url_for('settings.add_custom_test_type') }}" style="margin-top: 1.5rem; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-        <input type="text" name="name" placeholder="Test name (e.g. Tracer Gas Test)..." required style="flex: 1; min-width: 200px; background: var(--background); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem 1rem; font-size: 0.95rem;">
-        <select name="field_type" style="background: var(--background); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem 0.75rem; font-size: 0.95rem;">
+        <input type="text" name="name" placeholder="Test name (e.g. Tracer Gas Test)..." required style="flex: 1; min-width: 200px; background: var(--background); color: var(--text-main); border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem 1rem; font-size: 0.95rem;">
+        <select name="field_type" style="background: var(--background); color: var(--text-main); border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem 0.75rem; font-size: 0.95rem;">
             <option value="date">📅 Date</option>
             <option value="text">📝 Text</option>
             <option value="number">🔢 Number</option>
@@ -139,7 +139,7 @@
 
     <!-- Add New Action -->
     <form method="POST" action="{{ url_for('settings.add_action_option') }}" style="margin-top: 1.5rem; display: flex; gap: 0.75rem; align-items: center;">
-        <input type="text" name="label" placeholder="New action label..." required style="flex: 1; background: var(--background); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem 1rem; font-size: 0.95rem;">
+        <input type="text" name="label" placeholder="New action label..." required style="flex: 1; background: var(--background); color: var(--text-main); border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem 1rem; font-size: 0.95rem;">
         <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Action</button>
     </form>
 </div>
@@ -161,7 +161,7 @@
         position: absolute;
         cursor: pointer;
         top: 0; left: 0; right: 0; bottom: 0;
-        background-color: var(--border-color);
+        background-color: var(--border);
         transition: 0.3s;
         border-radius: 26px;
     }
@@ -177,7 +177,7 @@
         border-radius: 50%;
     }
     .toggle-switch input:checked + .toggle-slider {
-        background-color: var(--primary-color);
+        background-color: var(--primary);
     }
     .toggle-switch input:checked + .toggle-slider:before {
         transform: translateX(24px);

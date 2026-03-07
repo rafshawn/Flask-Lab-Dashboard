@@ -13,7 +13,7 @@
     <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, #10b981, #34d399, #6ee7b7);"></div>
     <div style="display:flex; gap:2rem; align-items:center; flex-wrap:wrap; padding-top:0.5rem;">
         <img src="https://ui-avatars.com/api/?name={{ tech.name | urlencode }}&background=10b981&color=fff&bold=true&size=96&font-size=0.4"
-             alt="{{ tech.name }}" style="width:96px; height:96px; border-radius:50%; border:3px solid var(--primary-color); flex-shrink:0;">
+             alt="{{ tech.name }}" style="width:96px; height:96px; border-radius:50%; border:3px solid var(--primary); flex-shrink:0;">
         <div style="flex:1; min-width:200px;">
             <h2 style="margin:0 0 0.25rem; font-size:1.5rem;">{{ tech.name }}</h2>
             <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
@@ -71,7 +71,7 @@
         <ul class="summary-list" style="margin-top:1rem;">
             <li style="display:flex; justify-content:space-between;">
                 <strong><i class="fa-solid fa-envelope" style="width:18px; color:var(--text-muted);"></i> Email</strong>
-                <span>{% if tech.email %}<a href="mailto:{{ tech.email }}" style="color:var(--primary-color); text-decoration:none;">{{ tech.email }}</a>{% else %}—{% endif %}</span>
+                <span>{% if tech.email %}<a href="mailto:{{ tech.email }}" style="color:var(--primary); text-decoration:none;">{{ tech.email }}</a>{% else %}—{% endif %}</span>
             </li>
             <li style="display:flex; justify-content:space-between;">
                 <strong><i class="fa-solid fa-phone" style="width:18px; color:var(--text-muted);"></i> Phone</strong>
@@ -94,7 +94,7 @@
         {% if recent_tests %}
         <div style="margin-top:1rem; display:flex; flex-direction:column; gap:0;">
             {% for test in recent_tests %}
-            <a href="{{ url_for('hoods.test_detail', id=test.id) }}" style="display:flex; align-items:center; gap:1rem; padding:0.85rem 0.75rem; text-decoration:none; color:var(--text-main); border-bottom:1px solid var(--border-color); transition:background 0.15s;" onmouseover="this.style.background='rgba(16,185,129,0.04)'" onmouseout="this.style.background='transparent'">
+            <a href="{{ url_for('hoods.test_detail', id=test.id) }}" style="display:flex; align-items:center; gap:1rem; padding:0.85rem 0.75rem; text-decoration:none; color:var(--text-main); border-bottom:1px solid var(--border); transition:background 0.15s;" onmouseover="this.style.background='rgba(16,185,129,0.04)'" onmouseout="this.style.background='transparent'">
                 <div style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;
                     {% if test.test_rating == 'Pass' %}background:rgba(16,185,129,0.15);{% else %}background:rgba(239,68,68,0.15);{% endif %}">
                     <i class="fa-solid {% if test.test_rating == 'Pass' %}fa-check{% else %}fa-xmark{% endif %}"

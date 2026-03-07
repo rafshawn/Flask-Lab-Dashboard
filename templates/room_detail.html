@@ -4,7 +4,7 @@
     <h1>{{ room.building_name }} - Room {{ room.room_no }}</h1>
     <div style="display:flex; gap:0.5rem;">
         <a href="{{ url_for('organizations.building_detail', id=room.floor.building_id) }}" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
-        <a href="{{ url_for('organizations.edit_room', id=room.id) }}" class="btn-primary" style="background:var(--primary-color); border-color:var(--primary-color);"><i class="fa-solid fa-pencil"></i> Edit Room</a>
+        <a href="{{ url_for('organizations.edit_room', id=room.id) }}" class="btn-primary" style="background:var(--primary); border-color:var(--primary);"><i class="fa-solid fa-pencil"></i> Edit Room</a>
         <a href="{{ url_for('hoods.add_hood') }}" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Hood</a>
         <button type="button" onclick="openDeleteModal('{{ url_for('organizations.delete_room', id=room.id) }}', 'WARNING: Are you sure you want to delete this Room? All Fumehoods inside will be permanently deleted.')" class="btn-primary" style="background:#ef4444; border-color:#ef4444;"><i class="fa-solid fa-trash"></i> Delete Room</button>
     </div>
@@ -24,7 +24,7 @@
             {% for hood in room.hoods %}
             <tr>
                 <td style="font-weight:600;">
-                    <a href="{{ url_for('hoods.hood_detail', id=hood.id) }}" style="color:var(--primary-color); text-decoration:none;">{{ hood.hood_id }}</a>
+                    <a href="{{ url_for('hoods.hood_detail', id=hood.id) }}" style="color:var(--primary); text-decoration:none;">{{ hood.hood_id }}</a>
                 </td>
                 <td><span class="badge badge-{{ hood.status|lower }}">{{ hood.status }}</span></td>
                 <td>{{ hood.manufacturer|default('-', true) }} {{ hood.model|default('', true) }}</td>

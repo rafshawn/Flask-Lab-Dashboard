@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-    <h2><i class="fa-solid fa-users" style="color:var(--primary-color);"></i> Technicians</h2>
+    <h2><i class="fa-solid fa-users" style="color:var(--primary);"></i> Technicians</h2>
 </div>
 
 <!-- Technicians Table -->
@@ -39,7 +39,7 @@
                     <td style="color:var(--text-muted);">{{ tech.office or '—' }}</td>
                     <td class="text-end">
                         <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
-                            <a href="{{ url_for('technicians.technician_profile', id=tech.id) }}" class="btn-icon" title="View Profile" style="color:var(--primary-color);">
+                            <a href="{{ url_for('technicians.technician_profile', id=tech.id) }}" class="btn-icon" title="View Profile" style="color:var(--primary);">
                                 <i class="fa-solid fa-arrow-right"></i>
                             </a>
                             <button type="button" onclick="openDeleteModal('{{ url_for('technicians.delete_technician', id=tech.id) }}', 'Delete technician {{ tech.name }}? Their test records will be unlinked.')" class="btn-icon" title="Delete" style="color:var(--danger);">
@@ -63,23 +63,23 @@
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem;">
             <div>
                 <label style="font-weight:600; font-size:0.85rem; margin-bottom:0.3rem; display:block; color:var(--text-muted);">Name *</label>
-                <input type="text" name="name" required placeholder="Full name..." style="width:100%; background:var(--background); color:var(--text-main); border:1px solid var(--border-color); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
+                <input type="text" name="name" required placeholder="Full name..." style="width:100%; background:var(--background); color:var(--text-main); border:1px solid var(--border); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
             </div>
             <div>
                 <label style="font-weight:600; font-size:0.85rem; margin-bottom:0.3rem; display:block; color:var(--text-muted);">Email</label>
-                <input type="email" name="email" placeholder="email@example.com" style="width:100%; background:var(--background); color:var(--text-main); border:1px solid var(--border-color); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
+                <input type="email" name="email" placeholder="email@example.com" style="width:100%; background:var(--background); color:var(--text-main); border:1px solid var(--border); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
             </div>
             <div>
                 <label style="font-weight:600; font-size:0.85rem; margin-bottom:0.3rem; display:block; color:var(--text-muted);">Phone</label>
-                <input type="text" name="phone" placeholder="555-555-5555" style="width:100%; background:var(--background); color:var(--text-main); border:1px solid var(--border-color); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
+                <input type="text" name="phone" placeholder="555-555-5555" style="width:100%; background:var(--background); color:var(--text-main); border:1px solid var(--border); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
             </div>
             <div>
                 <label style="font-weight:600; font-size:0.85rem; margin-bottom:0.3rem; display:block; color:var(--text-muted);">Office</label>
-                <input type="text" name="office" placeholder="Building, Room..." style="width:100%; background:var(--background); color:var(--text-main); border:1px solid var(--border-color); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
+                <input type="text" name="office" placeholder="Building, Room..." style="width:100%; background:var(--background); color:var(--text-main); border:1px solid var(--border); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
             </div>
             <div>
                 <label style="font-weight:600; font-size:0.85rem; margin-bottom:0.3rem; display:block; color:var(--text-muted);">Role</label>
-                <select name="role" style="width:100%; background:var(--background); color:var(--text-main); border:1px solid var(--border-color); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
+                <select name="role" style="width:100%; background:var(--background); color:var(--text-main); border:1px solid var(--border); border-radius:6px; padding:0.6rem 0.75rem; font-size:0.95rem;">
                     <option value="technician">Technician</option>
                     <option value="admin">Admin</option>
                 </select>

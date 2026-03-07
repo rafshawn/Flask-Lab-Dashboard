@@ -10,7 +10,7 @@
     <h2>{{ building.name }}</h2>
     <div style="display:flex; gap:0.5rem;">
         <a href="{{ url_for('organizations.org_detail', id=building.org_id) }}" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
-        <a href="{{ url_for('organizations.edit_building', id=building.id) }}" class="btn-primary" style="background:var(--primary-color); border-color:var(--primary-color);"><i class="fa-solid fa-pencil"></i> Edit Building</a>
+        <a href="{{ url_for('organizations.edit_building', id=building.id) }}" class="btn-primary" style="background:var(--primary); border-color:var(--primary);"><i class="fa-solid fa-pencil"></i> Edit Building</a>
         <button type="button" onclick="openDeleteModal('{{ url_for('organizations.delete_building', id=building.id) }}', 'WARNING: Are you sure you want to delete this Building? All Rooms and Fumehoods inside will be permanently deleted.')" class="btn-primary" style="background:#ef4444; border-color:#ef4444;"><i class="fa-solid fa-trash"></i> Delete Building</button>
     </div>
 </div>
@@ -45,7 +45,7 @@
                 {% for room in floor.rooms %}
                 <tr>
                     <td style="font-weight:600;">
-                        <a href="{{ url_for('organizations.room_detail', id=room.id) }}" style="color:var(--primary-color); text-decoration:none;">{{ room.room_no }}</a>
+                        <a href="{{ url_for('organizations.room_detail', id=room.id) }}" style="color:var(--primary); text-decoration:none;">{{ room.room_no }}</a>
                     </td>
                     <td>{{ floor.name }}</td>
                     <td>
@@ -88,7 +88,7 @@
                     {% for hood in room.hoods %}
                     <tr>
                         <td style="font-weight:600;">
-                            <a href="{{ url_for('hoods.hood_detail', id=hood.id) }}" style="color:var(--primary-color); text-decoration:none;">{{ hood.hood_id }}</a>
+                            <a href="{{ url_for('hoods.hood_detail', id=hood.id) }}" style="color:var(--primary); text-decoration:none;">{{ hood.hood_id }}</a>
                         </td>
                         <td>{{ room.room_no }}</td>
                         <td>{{ hood.dept|default('-', true) }}</td>
