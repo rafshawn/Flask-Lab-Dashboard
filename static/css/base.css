@@ -1,0 +1,47 @@
+/* ============================================
+   Base Styles (Reset & Typography)
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-main);
+  font-family: var(--font-family);
+  line-height: 1.6;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Utility Classes */
+.w-100 {
+  width: 100%;
+  text-align: center;
+}
+
+.mr-2 {
+  margin-right: 1rem;
+}
+
+.text-danger {
+  color: var(--danger);
+  font-weight: bold;
+}
+
+.text-success {
+  color: var(--success);
+  font-weight: bold;
+}
+
+.text-center {
+  text-align: center;
+}

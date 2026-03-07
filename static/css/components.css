@@ -1,0 +1,294 @@
+/* ============================================
+   Component Styles (Buttons, Cards, Forms, Tables, Badges)
+   ============================================ */
+
+/* ============================================
+   Buttons
+   ============================================ */
+.btn-primary,
+.btn-secondary {
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: var(--surface-color);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--border-color);
+}
+
+/* ============================================
+   Page Headers
+   ============================================ */
+.dashboard-header,
+.page-header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ============================================
+   Cards & Widgets
+   ============================================ */
+.widget-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.widget {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.widget h2 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   Tables
+   ============================================ */
+.table-container {
+  background: var(--surface-color);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Apex Style Tables */
+.apex-table-card {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.table-row-hover:hover td {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+/* ============================================
+   Badges
+   ============================================ */
+.badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.badge-active {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+}
+
+.badge-maintenance {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: var(--warning);
+}
+
+.badge-decommissioned {
+  background-color: rgba(148, 163, 184, 0.2);
+  color: var(--text-muted);
+}
+
+/* ============================================
+   Forms
+   ============================================ */
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.modern-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.modern-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.modern-form input,
+.modern-form select {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--background);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.modern-form input:focus,
+.modern-form select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* ============================================
+   Tabs
+   ============================================ */
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0px;
+}
+
+.tab {
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.tab.active,
+.tab:hover {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+/* ============================================
+   Filter Chips
+   ============================================ */
+.filter-chips {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.chip:hover, .chip.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* ============================================
+   Action Buttons & Icons
+   ============================================ */
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(156, 163, 175, 0.1);
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* ============================================
+   Summary Lists
+   ============================================ */
+.summary-list {
+  list-style: none;
+}
+
+.summary-list li {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem;
+}
+
+.summary-list li:last-child {
+  border-bottom: none;
+}
+
+.summary-list .warning strong {
+  color: var(--danger);
+}

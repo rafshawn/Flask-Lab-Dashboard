@@ -35,7 +35,7 @@
         </div>
         {% endif %}
         <div style="display:flex; flex-direction:column; gap:0.5rem; width:100%;">
-            <a href="{{ url_for('hoods.print_qr', id=hood.id) }}" target="_blank" class="btn-primary" style="padding: 0.5rem 1rem; background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color);"><i class="fa-solid fa-tag"></i> Print Sticker</a>
+            <a href="{{ url_for('hoods.print_qr', id=hood.id) }}" target="_blank" class="btn-primary" style="padding: 0.5rem 1rem; background: var(--background); color: var(--text-main); border: 1px solid var(--border-color);"><i class="fa-solid fa-tag"></i> Print Sticker</a>
             <a href="{{ url_for('hoods.view_certificate', id=hood.id) }}" target="_blank" class="btn-primary" style="padding: 0.5rem 1rem;"><i class="fa-solid fa-file-contract"></i> View Certificate</a>
         </div>    </div>
 </div>
@@ -48,7 +48,7 @@
             <ul class="summary-list">
                 <li style="display: flex; justify-content: space-between; align-items: center;">
                     <strong>Action Taken:</strong>
-                    <select name="action_taken_id" style="background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem 0.75rem; min-width: 200px;">
+                    <select name="action_taken_id" style="background: var(--background); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem 0.75rem; min-width: 200px;">
                         <option value="">— None —</option>
                         {% for opt in action_options %}
                         <option value="{{ opt.id }}" {% if hood.action_taken_id == opt.id %}selected{% endif %}>{{ opt.label }}</option>
@@ -58,7 +58,7 @@
                 <li style="display: flex; justify-content: space-between; align-items: center;">
                     <strong>Face Velocity Design:</strong>
                     <span style="display:flex; align-items:center; gap:0.25rem;">
-                        <input type="number" name="face_velocity_design" value="{{ hood.face_velocity_design or '' }}" step="0.1" placeholder="FPM" style="width: 80px; background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem; text-align: center;"> FPM
+                        <input type="number" name="face_velocity_design" value="{{ hood.face_velocity_design or '' }}" step="0.1" placeholder="FPM" style="width: 80px; background: var(--background); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem; text-align: center;"> FPM
                     </span>
                 </li>
                 {% for ct in custom_tests %}
@@ -69,13 +69,13 @@
                 <li style="display: flex; justify-content: space-between; align-items: center;">
                     <strong>{{ ct.name }}:</strong>
                     {% if ct.field_type == 'date' %}
-                        <input type="date" name="custom_{{ ct.id }}" value="{{ existing.val }}" style="background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem 0.75rem;">
+                        <input type="date" name="custom_{{ ct.id }}" value="{{ existing.val }}" style="background: var(--background); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem 0.75rem;">
                     {% elif ct.field_type == 'text' %}
-                        <input type="text" name="custom_{{ ct.id }}" value="{{ existing.val }}" placeholder="Enter value..." style="background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem 0.75rem; min-width: 200px;">
+                        <input type="text" name="custom_{{ ct.id }}" value="{{ existing.val }}" placeholder="Enter value..." style="background: var(--background); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem 0.75rem; min-width: 200px;">
                     {% elif ct.field_type == 'number' %}
-                        <input type="number" name="custom_{{ ct.id }}" value="{{ existing.val }}" step="0.01" placeholder="0" style="width: 100px; background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem; text-align: center;">
+                        <input type="number" name="custom_{{ ct.id }}" value="{{ existing.val }}" step="0.01" placeholder="0" style="width: 100px; background: var(--background); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem; text-align: center;">
                     {% elif ct.field_type == 'pass_fail' %}
-                        <select name="custom_{{ ct.id }}" style="background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem 0.75rem;">
+                        <select name="custom_{{ ct.id }}" style="background: var(--background); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.4rem 0.75rem;">
                             <option value="">— N/A —</option>
                             <option value="Pass" {% if existing.val == 'Pass' %}selected{% endif %}>Pass</option>
                             <option value="Fail" {% if existing.val == 'Fail' %}selected{% endif %}>Fail</option>
@@ -86,7 +86,7 @@
             </ul>
             <div style="margin-top: 1rem;">
                 <label><strong>Comments:</strong></label>
-                <textarea name="comments" rows="3" style="width: 100%; margin-top: 0.5rem; background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem; resize: vertical; font-family: var(--font-family);">{{ hood.comments or '' }}</textarea>
+                <textarea name="comments" rows="3" style="width: 100%; margin-top: 0.5rem; background: var(--background); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem; resize: vertical; font-family: var(--font-family);">{{ hood.comments or '' }}</textarea>
             </div>
             <div style="margin-top: 1rem; text-align: right;">
                 <button type="submit" class="btn-primary"><i class="fa-solid fa-save"></i> Save</button>

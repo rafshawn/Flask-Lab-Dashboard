@@ -1,0 +1,94 @@
+/* ============================================
+   Modal Styles
+   ============================================ */
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Modal Container */
+.custom-modal {
+  background-color: var(--surface-color);
+  width: 90%;
+  max-width: 450px;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  transform: scale(0.95);
+  transition: transform 0.2s ease;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.modal-overlay.active .custom-modal {
+  transform: scale(1);
+}
+
+/* Modal Header */
+.custom-modal-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.custom-modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.close-modal-btn:hover {
+  color: var(--danger);
+}
+
+/* Modal Body */
+.custom-modal-body {
+  padding: 1.5rem;
+  color: var(--text-main);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Modal Footer */
+.custom-modal-footer {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  background-color: rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}

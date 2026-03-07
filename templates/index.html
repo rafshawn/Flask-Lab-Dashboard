@@ -42,7 +42,7 @@
 
 <!-- Metrics Overview -->
 <div class="dashboard-metrics">
-    <a href="{{ url_for('hoods.list_hoods') }}" class="metric-card" style="text-decoration: none; color: inherit; display: block;">
+    <a href="{{ url_for('hoods.list_hoods') }}" class="metric-card">
         <div class="metric-title">Total Fumehoods</div>
         <div class="metric-value">
             {{ total }}
@@ -82,16 +82,6 @@
 
 <!-- Charts Grid -->
 <div class="dashboard-charts">
-    <!-- Revenue / Multi Line style chart - Tests over time -->
-    <div class="chart-card chart-card-full">
-        <div class="chart-header">
-            <h3>Certifications Over Last 6 Months</h3>
-        </div>
-        <div style="position: relative; height: 350px;">
-            <canvas id="testsChart"></canvas>
-        </div>
-    </div>
-
     <!-- Dept distribution -->
     <div class="chart-card chart-card-half">
         <div class="chart-header">
@@ -109,6 +99,16 @@
         </div>
         <div style="position: relative; height: 300px;">
             <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Revenue / Multi Line style chart - Tests over time -->
+    <div class="chart-card chart-card-full">
+        <div class="chart-header">
+            <h3>Certifications Over Last 6 Months</h3>
+        </div>
+        <div style="position: relative; height: 350px;">
+            <canvas id="testsChart"></canvas>
         </div>
     </div>
 </div>

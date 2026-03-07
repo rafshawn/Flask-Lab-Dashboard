@@ -1,0 +1,50 @@
+/* ============================================
+   DataTables Plugin Overrides
+   ============================================ */
+
+.dataTables_wrapper .dataTables_filter input {
+  background-color: var(--background);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  margin-left: 0.5rem;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.dataTables_wrapper .dataTables_length select {
+  background-color: var(--background);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  border-radius: 6px;
+  padding: 0.2rem 0.5rem;
+}
+
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter {
+  color: var(--text-muted) !important;
+  margin-bottom: 1rem;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  color: var(--text-main) !important;
+  border: 1px solid transparent !important;
+  border-radius: 6px !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+  background: var(--primary-color) !important;
+  color: white !important;
+  border-color: var(--primary-color) !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background: var(--surface-color) !important;
+  border-color: var(--border-color) !important;
+}

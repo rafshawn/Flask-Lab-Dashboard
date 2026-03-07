@@ -9,7 +9,7 @@
     <h2>General Preferences</h2>
     <form method="POST" action="{{ url_for('settings.org_settings') }}">
         <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem;">
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: var(--bg-color); border-radius: 8px; border: 1px solid var(--border-color);">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: var(--background); border-radius: 8px; border: 1px solid var(--border-color);">
                 <div>
                     <strong>Default Face Velocity (FPM)</strong>
                     <p style="color: var(--text-muted); margin: 0.25rem 0 0; font-size: 0.9rem;">The default design spec face velocity for new fumehoods (e.g. 100 FPM standard, 80 FPM for Core Science).</p>
@@ -84,8 +84,8 @@
 
     <!-- Add New Custom Test Type -->
     <form method="POST" action="{{ url_for('settings.add_custom_test_type') }}" style="margin-top: 1.5rem; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-        <input type="text" name="name" placeholder="Test name (e.g. Tracer Gas Test)..." required style="flex: 1; min-width: 200px; background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem 1rem; font-size: 0.95rem;">
-        <select name="field_type" style="background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem 0.75rem; font-size: 0.95rem;">
+        <input type="text" name="name" placeholder="Test name (e.g. Tracer Gas Test)..." required style="flex: 1; min-width: 200px; background: var(--background); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem 1rem; font-size: 0.95rem;">
+        <select name="field_type" style="background: var(--background); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem 0.75rem; font-size: 0.95rem;">
             <option value="date">📅 Date</option>
             <option value="text">📝 Text</option>
             <option value="number">🔢 Number</option>
@@ -139,7 +139,7 @@
 
     <!-- Add New Action -->
     <form method="POST" action="{{ url_for('settings.add_action_option') }}" style="margin-top: 1.5rem; display: flex; gap: 0.75rem; align-items: center;">
-        <input type="text" name="label" placeholder="New action label..." required style="flex: 1; background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem 1rem; font-size: 0.95rem;">
+        <input type="text" name="label" placeholder="New action label..." required style="flex: 1; background: var(--background); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem 1rem; font-size: 0.95rem;">
         <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Action</button>
     </form>
 </div>
