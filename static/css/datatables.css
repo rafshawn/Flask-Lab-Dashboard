@@ -1,11 +1,12 @@
-/* ============================================
-   DataTables Plugin Overrides (Shadcn Style)
-   ============================================ */
+/* ============================
+   DataTables Plugin Overrides
+   ============================ */
 
 /* Main Table Container */
 .dataTables_wrapper {
   color: var(--text-main);
   font-size: 0.875rem; /* text-sm */
+  overflow-x: auto;
 }
 
 /* Toolbar (Search and Length Menu) */
@@ -35,7 +36,7 @@
   margin-left: 0;
   height: 2rem; /* h-8 */
   width: 150px;
-  transition: width 0.3s, border-color 0.2s, box-shadow 0.2s;
+  transition: width 0.3s, border-color 0.2s;
   font-size: 0.875rem;
 }
 
@@ -47,8 +48,7 @@
 
 .dataTables_wrapper .dataTables_filter input:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 20%, transparent);
+  border-color: var(--ring);
 }
 
 /* Add custom search placeholder via pseudoelement if needed, or rely on JS placeholder */
