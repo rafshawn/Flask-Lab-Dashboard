@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- DataTables CSS & JS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-
-<div class="page-header">
-    <h2>{{ building.name }}</h2>
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div style="display:flex; align-items:center; gap:1rem;">
+        <a href="{{ url_for('organizations.org_detail', id=building.org_id) }}" class="btn-icon" title="Back to Organization" style="color:var(--text-muted);">
+            <i class="fa-solid fa-chevron-left"></i>
+        </a>
+        <h2 style="margin:0;">{{ building.name }}</h2>
+    </div>
     <div class="d-flex gap-2">
-        <a href="{{ url_for('organizations.org_detail', id=building.org_id) }}" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
         <a href="{{ url_for('organizations.edit_building', id=building.id) }}" class="btn-primary"><i class="fa-solid fa-pencil"></i> Edit Building</a>
         <button
             type="button"
@@ -33,7 +33,7 @@
 </div>
 
 <h2>Rooms</h2>
-<div class="rounded-md border border-border overflow-hidden mt-4 mb-8">
+<div class="rounded-md border border-border mt-4 mb-8" style="overflow-x:auto;">
     <table id="roomsTable" class="data-table w-100 table align-middle">
         <thead>
             <tr>
@@ -75,7 +75,7 @@
 </div>
 
 <h2>Fumehoods</h2>
-<div class="rounded-md border border-border overflow-hidden mt-4 mb-8">
+<div class="rounded-md border border-border mt-4 mb-8" style="overflow-x:auto;">
     <table id="hoodsTable" class="data-table w-100 table align-middle">
         <thead>
             <tr>
@@ -126,7 +126,8 @@
                 },
                 dom: '<"d-flex align-items-center justify-content-between p-4 mb-2"f>rt<"table-bottom"ip>',
                 columnDefs: [
-                    { orderable: false, targets: 4 }
+                    { orderable: false, targets: 4 },
+                    { orderSequence: ['asc', 'desc', ''], targets: '_all' }
                 ]
             });
         }
@@ -143,7 +144,8 @@
                 },
                 dom: '<"d-flex align-items-center justify-content-between p-4 mb-2"f>rt<"table-bottom"ip>',
                 columnDefs: [
-                    { orderable: false, targets: 4 }
+                    { orderable: false, targets: 4 },
+                    { orderSequence: ['asc', 'desc', ''], targets: '_all' }
                 ]
             });
         }

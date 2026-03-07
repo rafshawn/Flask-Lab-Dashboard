@@ -6,7 +6,7 @@
 
 <!-- Technicians Table -->
 <div class="widget" style="margin-bottom: 2rem;">
-    <div class="rounded-md border border-border overflow-hidden mt-4">
+    <div class="rounded-md border border-border mt-4" style="overflow-x:auto;">
         <table class="data-table w-100 table align-middle" id="technicians-table">
             <thead>
                 <tr>
@@ -40,7 +40,7 @@
                     <td class="text-end">
                         <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
                             <a href="{{ url_for('technicians.technician_profile', id=tech.id) }}" class="btn-icon" title="View Profile" style="color:var(--primary);">
-                                <i class="fa-solid fa-arrow-right"></i>
+                                <i class="fa-solid fa-chevron-right"></i>
                             </a>
                             <button type="button" onclick="openeventModal('{{ url_for('technicians.delete_technician', id=tech.id) }}', 'Delete technician {{ tech.name }}? Their test records will be unlinked.')" class="btn-icon" title="Delete" style="color:var(--danger);">
                                 <i class="fa-solid fa-trash"></i>
@@ -102,6 +102,10 @@
                 order: [[0, 'asc']],
                 language: { search: "", searchPlaceholder: "Filter technicians..." },
                 dom: '<"d-flex align-items-center justify-content-between p-4 mb-2"f>rt<"table-bottom"ip>',
+                columnDefs: [
+                    { orderable: false, targets: 5 },
+                    { orderSequence: ['asc', 'desc', ''], targets: '_all' }
+                ]
             });
         });
     }

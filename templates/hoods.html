@@ -52,7 +52,7 @@
     </div>
 </div>
 
-<div class="rounded-md border border-border overflow-hidden mb-8">
+<div class="rounded-md border border-border mb-8" style="overflow-x:auto;">
     <table id="hoodsTable" class="data-table w-100 table align-middle">
         <thead>
             <tr>
@@ -116,7 +116,8 @@
                 },
                 dom: '<"d-flex align-items-center justify-content-between p-4 mb-2">rt<"table-bottom"ip>',
                 columnDefs: [
-                    { orderable: false, targets: 7 } // Disable sorting on Actions
+                    { orderable: false, targets: 7 }, // Disable sorting on Actions
+                    { orderSequence: ['asc', 'desc', ''], targets: '_all' }
                 ],
                 initComplete: function() {
                     let api = this.api();

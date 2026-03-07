@@ -12,6 +12,7 @@
 
     <!-- jQuery and DataTables -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <!-- Chart.js -->
@@ -36,13 +37,13 @@
                 <a href="{{ url_for('dashboard.dashboard') }}" class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
                     <i class="fa-solid fa-chart-line"></i> <span>Dashboard</span>
                 </a>
-                <a href="{{ url_for('organizations.list_orgs') }}" class="nav-item {% if 'org' in request.endpoint or 'building' in request.endpoint or 'room' in request.endpoint %}active{% endif %}">
+                <a href="{{ url_for('organizations.list_orgs') }}" class="nav-item {% if ('org' in request.endpoint or 'building' in request.endpoint or 'room' in request.endpoint) and request.endpoint != 'settings.org_settings' %}active{% endif %}">
                     <i class="fa-solid fa-sitemap"></i> <span>Organizations</span>
                 </a>
                 <a href="{{ url_for('hoods.list_hoods') }}" class="nav-item {% if 'hood' in request.endpoint and 'add' not in request.endpoint and not request.args.get('filter') %}active{% endif %}">
                     <i class="fa-solid fa-wind"></i> <span>All Hoods</span>
                 </a>
-                <a href="{{ url_for('technicians.list_technicians') }}" class="nav-item {% if 'technician' in request.endpoint or request.endpoint == 'technician_profile' %}active{% endif %}">
+                <a href="{{ url_for('technicians.list_technicians') }}" class="nav-item {% if request.endpoint == 'technicians.list_technicians' %}active{% endif %}">
                     <i class="fa-solid fa-users"></i> <span>Technicians</span>
                 </a>
 
