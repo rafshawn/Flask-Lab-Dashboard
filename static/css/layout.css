@@ -58,8 +58,17 @@
   padding: 1.5rem 0;
 }
 
+.sidebar-divider {
+  margin-top: 1rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.5rem;
+  width: 80%;
+  margin-left: 10%;
+}
+
+
 .logo-text {
-  background: linear-gradient(90deg, #34d399, #10b981);
+  background: linear-gradient(90deg, var(--chart-1), var(--success));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -95,7 +104,7 @@
 
 .nav-item:hover, .nav-item.active {
   color: var(--primary);
-  background-color: rgba(16, 185, 129, 0.08);
+  background-color: color-mix(in srgb, var(--primary) 10%, transparent);
   border-right-color: var(--primary);
 }
 
@@ -143,7 +152,7 @@
 }
 
 .sidebar-user-card:hover {
-  background-color: rgba(16, 185, 129, 0.08);
+  background-color: color-mix(in srgb, var(--primary) 10%, transparent);
 }
 
 .sidebar-user-avatar {
@@ -232,6 +241,11 @@
 
 .icon-btn:hover {
   background-color: var(--input);
+}
+
+.org-switcher {
+  padding-right: 1.5rem;
+  border-right: 1px solid var(--border);
 }
 
 .user-profile {

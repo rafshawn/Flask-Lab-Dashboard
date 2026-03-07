@@ -20,15 +20,15 @@ def seed_data():
 
     # 1. Create Organization
     org1 = Organization(
-        name="Memorial University of Newfoundland",
-        address_1="230 Elizabeth Ave",
-        city="St. John's",
+        name="Optio Industries",
+        address_1="901 Tromp Greens",
+        city="New Loraine",
         state="NL",
-        zip_code="A1C 5S7",
+        zip_code="791-326",
         country="Canada",
-        phone="709-864-8000",
-        website="mun.ca",
-        email="info@mun.ca"
+        phone="+1-567-510-8151",
+        website="https://optio.biz",
+        email="help@optio.biz"
     )
     db.session.add(org1)
     db.session.commit()
@@ -130,10 +130,10 @@ def seed_data():
 
     # 5b. Create sample technicians
     tech_data = [
-        {'name': 'Jamie Smith', 'email': 'j.smith@mun.ca', 'phone': '709-555-1001', 'office': 'Science Building 2, Room 204', 'role': 'admin'},
-        {'name': 'Alex Admin', 'email': 'a.admin@mun.ca', 'phone': '709-555-1002', 'office': 'Core Science 1, Room 110', 'role': 'admin'},
-        {'name': 'Taylor Tech', 'email': 't.tech@mun.ca', 'phone': '709-555-1003', 'office': 'Chemistry Building, Room 301', 'role': 'technician'},
-        {'name': 'Sam Connor', 'email': 's.connor@mun.ca', 'phone': '709-555-1004', 'office': 'Science Building 2, Room 112', 'role': 'technician'},
+        {'name': 'Jamie Smith', 'email': 'j.smith@optio.biz', 'phone': '709-555-1001', 'office': 'Science Building 2, Room 204', 'role': 'admin'},
+        {'name': 'Alex Admin', 'email': 'a.admin@optio.biz', 'phone': '709-555-1002', 'office': 'Core Science 1, Room 110', 'role': 'admin'},
+        {'name': 'Taylor Tech', 'email': 't.tech@optio.biz', 'phone': '709-555-1003', 'office': 'Chemistry Building, Room 301', 'role': 'technician'},
+        {'name': 'Sam Connor', 'email': 's.connor@optio.biz', 'phone': '709-555-1004', 'office': 'Science Building 2, Room 112', 'role': 'technician'},
     ]
     technicians_db = []
     for td in tech_data:

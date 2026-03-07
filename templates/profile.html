@@ -10,7 +10,7 @@
 <!-- Profile Hero Card -->
 <div class="widget" style="margin-bottom:2rem; position:relative; overflow:hidden;">
     <!-- Gradient accent bar -->
-    <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, #10b981, #34d399, #6ee7b7);"></div>
+    <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, var(--chart-1), var(--success));"></div>
     <div style="display:flex; gap:2rem; align-items:center; flex-wrap:wrap; padding-top:0.5rem;">
         <img src="https://ui-avatars.com/api/?name={{ tech.name | urlencode }}&background=10b981&color=fff&bold=true&size=96&font-size=0.4"
              alt="{{ tech.name }}" style="width:96px; height:96px; border-radius:50%; border:3px solid var(--primary); flex-shrink:0;">
@@ -20,7 +20,7 @@
                 {% if tech.role == 'admin' %}
                     <span class="badge badge-active" style="font-size:0.8rem;">Administrator</span>
                 {% else %}
-                    <span class="badge" style="background:rgba(59,130,246,0.15); color:#3b82f6; font-size:0.8rem;">Technician</span>
+                    <span class="badge badge-info">Technician</span>
                 {% endif %}
                 {% if tech.office %}
                 <span style="color:var(--text-muted); font-size:0.9rem;"><i class="fa-solid fa-location-dot" style="margin-right:0.25rem;"></i>{{ tech.office }}</span>
@@ -43,21 +43,21 @@
         <div class="metric-title">Tests Completed</div>
         <div class="metric-value">
             {{ total_tests }}
-            <div class="metric-icon" style="background: rgba(139,92,246,0.15);"><i class="fa-solid fa-vial" style="color:#8b5cf6;"></i></div>
+            <div class="metric-icon icon-blue"><i class="fa-solid fa-vial"></i></div>
         </div>
     </div>
     <div class="metric-card">
         <div class="metric-title">Pass Rate</div>
         <div class="metric-value">
             {{ pass_rate }}%
-            <div class="metric-icon" style="background: rgba(245,158,11,0.15);"><i class="fa-solid fa-chart-line" style="color:#f59e0b;"></i></div>
+            <div class="metric-icon icon-yellow"><i class="fa-solid fa-chart-line"></i></div>
         </div>
     </div>
     <div class="metric-card">
         <div class="metric-title">Member Since</div>
         <div class="metric-value" style="font-size:1.1rem;">
             {{ tech.created_at.strftime('%b %Y') if tech.created_at else 'N/A' }}
-            <div class="metric-icon" style="background: rgba(236,72,153,0.15);"><i class="fa-solid fa-calendar" style="color:#ec4899;"></i></div>
+            <div class="metric-icon icon-red"><i class="fa-solid fa-calendar"></i></div>
         </div>
     </div>
 </div>
@@ -94,11 +94,11 @@
         {% if recent_tests %}
         <div style="margin-top:1rem; display:flex; flex-direction:column; gap:0;">
             {% for test in recent_tests %}
-            <a href="{{ url_for('hoods.test_detail', id=test.id) }}" style="display:flex; align-items:center; gap:1rem; padding:0.85rem 0.75rem; text-decoration:none; color:var(--text-main); border-bottom:1px solid var(--border); transition:background 0.15s;" onmouseover="this.style.background='rgba(16,185,129,0.04)'" onmouseout="this.style.background='transparent'">
-                <div style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;
-                    {% if test.test_rating == 'Pass' %}background:rgba(16,185,129,0.15);{% else %}background:rgba(239,68,68,0.15);{% endif %}">
+            <a href="{{ url_for('hoods.test_detail', id=test.id) }}" class="table-row-hover" style="display:flex; align-items:center; gap:1rem; padding:0.85rem 0.75rem; text-decoration:none; color:var(--text-main); border-bottom:1px solid var(--border); transition:background 0.15s;">
+                <div style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
+                     class="{% if test.test_rating == 'Pass' %}icon-green{% else %}icon-red{% endif %}">
                     <i class="fa-solid {% if test.test_rating == 'Pass' %}fa-check{% else %}fa-xmark{% endif %}"
-                       style="{% if test.test_rating == 'Pass' %}color:#10b981;{% else %}color:#ef4444;{% endif %} font-size:0.9rem;"></i>
+                       style="font-size:0.9rem;"></i>
                 </div>
                 <div style="flex:1; min-width:0;">
                     <div style="font-weight:600; font-size:0.9rem;">{{ test.hood.hood_id }}</div>

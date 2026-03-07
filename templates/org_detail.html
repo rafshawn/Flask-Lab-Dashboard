@@ -10,8 +10,8 @@
     <h2>{{ org.name }}</h2>
     <div style="display:flex; gap:0.5rem;">
         <a href="{{ url_for('organizations.list_orgs') }}" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
-        <a href="{{ url_for('organizations.edit_org', id=org.id) }}" class="btn-primary" style="background:var(--primary); border-color:var(--primary);"><i class="fa-solid fa-pencil"></i> Edit Organization</a>
-        <button type="button" onclick="openDeleteModal('{{ url_for('organizations.delete_org', id=org.id) }}', 'WARNING: Are you sure you want to delete this Organization? All associated Buildings, Rooms, and Fumehoods will be permanently deleted.')" class="btn-primary" style="background:#ef4444; border-color:#ef4444;"><i class="fa-solid fa-trash"></i> Delete Organization</button>
+        <a href="{{ url_for('organizations.edit_org', id=org.id) }}" class="btn-primary"><i class="fa-solid fa-pencil"></i> Edit Organization</a>
+        <button type="button" onclick="openeventModal('{{ url_for('organizations.delete_org', id=org.id) }}', 'WARNING: Are you sure you want to delete this Organization? All associated Buildings, Rooms, and Fumehoods will be permanently deleted.')" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Organization</button>
     </div>
 </div>
 

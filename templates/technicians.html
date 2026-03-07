@@ -31,7 +31,7 @@
                         {% if tech.role == 'admin' %}
                             <span class="badge badge-active" style="font-size:0.75rem;">Admin</span>
                         {% else %}
-                            <span class="badge" style="background:rgba(59,130,246,0.15); color:#3b82f6; font-size:0.75rem;">Technician</span>
+                            <span class="badge badge-info">Technician</span>
                         {% endif %}
                     </td>
                     <td style="color:var(--text-muted);">{{ tech.email or '—' }}</td>
@@ -42,7 +42,7 @@
                             <a href="{{ url_for('technicians.technician_profile', id=tech.id) }}" class="btn-icon" title="View Profile" style="color:var(--primary);">
                                 <i class="fa-solid fa-arrow-right"></i>
                             </a>
-                            <button type="button" onclick="openDeleteModal('{{ url_for('technicians.delete_technician', id=tech.id) }}', 'Delete technician {{ tech.name }}? Their test records will be unlinked.')" class="btn-icon" title="Delete" style="color:var(--danger);">
+                            <button type="button" onclick="openeventModal('{{ url_for('technicians.delete_technician', id=tech.id) }}', 'Delete technician {{ tech.name }}? Their test records will be unlinked.')" class="btn-icon" title="Delete" style="color:var(--danger);">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </div>

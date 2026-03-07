@@ -9,7 +9,7 @@
     <div class="widget room-card" onclick="window.location.href='{{ url_for('organizations.room_detail', id=room.id) }}'" style="cursor: pointer; transition: transform 0.2s;">
         <h3>{{ room.building_name }}</h3>
         <p class="text-muted">Rm {{ room.room_no }}</p>
-        <div style="margin-top: 1rem;">
+        <div class="mt-4">
             <span class="badge badge-active">{{ room.hoods|length }} Hood(s)</span>
         </div>
     </div>

@@ -32,6 +32,10 @@ a {
   margin-right: 1rem;
 }
 
+.text-center {
+  text-align: center;
+}
+
 .text-danger {
   color: var(--danger);
   font-weight: bold;
@@ -42,6 +46,76 @@ a {
   font-weight: bold;
 }
 
-.text-center {
-  text-align: center;
-}
+/* Flexbox Utilities */
+.d-flex { display: flex; }
+.flex-column { flex-direction: column; }
+.justify-content-between { justify-content: space-between; }
+.justify-content-center { justify-content: center; }
+.justify-content-end { justify-content: flex-end; }
+.align-items-center { align-items: center; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1; }
+
+/* Display Utilities */
+.d-none { display: none !important; }
+.d-block { display: block !important; }
+.d-inline-block { display: inline-block !important; }
+
+/* Grid Utilities */
+.d-grid { display: grid; }
+.grid-2 { grid-template-columns: 1fr 1fr; }
+.grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+/* Gap Utilities */
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.gap-6 { gap: 1.5rem; }
+.gap-8 { gap: 2rem; }
+
+/* Margin/Padding Utilities */
+.mt-2 { margin-top: 0.5rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-6 { margin-top: 1.5rem; }
+.mt-8 { margin-top: 2rem; }
+
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+
+.ml-auto { margin-left: auto; }
+.ms-3 { margin-left: 0.5rem; }
+.mr-2 { margin-right: 0.5rem; }
+
+.p-0 { padding: 0; }
+.p-3 { padding: 0.75rem; }
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.p-8 { padding: 2rem; }
+
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+.py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+
+.px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+
+/* Typography */
+.fw-bold { font-weight: 600; }
+.fw-normal { font-weight: 400; }
+.text-muted { color: var(--text-muted); }
+.text-primary { color: var(--primary); }
+.text-sm { font-size: 0.875rem; }
+.text-lg { font-size: 1.125rem; }
+.text-xl { font-size: 1.25rem; }
+.text-3xl { font-size: 3rem; }
+.lh-base { line-height: 1.6; }
+
+/* Other */
+.w-auto { width: auto; }
+.m-0 { margin: 0; }
+.border-0 { border: none !important; }
+

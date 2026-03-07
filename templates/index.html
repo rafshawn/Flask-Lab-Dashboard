@@ -3,9 +3,9 @@
 {% block content %}
 {% if empty_state %}
 <div class="empty-state">
-    <i class="fa-solid fa-sitemap" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1.5rem;"></i>
+    <i class="fa-solid fa-sitemap text-3xl text-muted mb-6"></i>
     <h2>Welcome to O2 Fumehoods!</h2>
-    <p style="color: var(--text-muted); max-width: 500px; margin: 1rem auto; line-height: 1.6;">
+    <p class="text-muted lh-base" style="max-width: 500px; margin: 1rem auto;">
         It looks like you don't have any organizations set up yet. To get started, you'll need to create an organization to manage your buildings, rooms, and fumehoods.
     </p>
     <div class="btn-wrapper">
@@ -33,7 +33,7 @@
     }
 </script>
 {% else %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+<div class="page-header">
     <h2>Dashboard Overview</h2>
 </div>
 

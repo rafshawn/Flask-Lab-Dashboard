@@ -77,23 +77,23 @@
 }
 
 .icon-blue {
-  background-color: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
+  background-color: color-mix(in srgb, var(--text-accent) 15%, transparent);
+  color: var(--text-accent);
 }
 
 .icon-green {
-  background-color: rgba(16, 185, 129, 0.1);
-  color: #10b981;
+  background-color: color-mix(in srgb, var(--success) 15%, transparent);
+  color: var(--success);
 }
 
 .icon-red {
-  background-color: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
+  background-color: color-mix(in srgb, var(--danger) 15%, transparent);
+  color: var(--danger);
 }
 
 .icon-yellow {
-  background-color: rgba(245, 158, 11, 0.1);
-  color: #f59e0b;
+  background-color: color-mix(in srgb, var(--warning) 15%, transparent);
+  color: var(--warning);
 }
 
 /* Dashboard Charts Grid */

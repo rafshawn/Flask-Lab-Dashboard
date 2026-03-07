@@ -15,11 +15,11 @@
         <!-- Sidebar Navigation -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <i class="fa-solid fa-flask" style="color: var(--primary);"></i>
+                <i class="fa-solid fa-flask text-primary"></i>
                 <span class="logo-text">O2 Fumehoods</span>
             </div>
             <div class="sidebar-action">
-                <a href="{{ url_for('hoods.add_hood') }}" class="btn-primary w-100" style="display:flex; justify-content:center; align-items:center; gap:0.5rem;">
+                <a href="{{ url_for('hoods.add_hood') }}" class="btn-primary w-100 d-flex justify-content-center align-items-center gap-2">
                     <i class="fa-solid fa-plus"></i> <span>Add Hood</span>
                 </a>
             </div>
@@ -42,19 +42,19 @@
                 <div class="sidebar-text">Tables</div>
 
                 <a href="{{ url_for('hoods.list_hoods', filter='Overdue') }}" class="nav-item {% if 'hood' in request.endpoint and request.args.get('filter') == 'Overdue' %}active{% endif %}">
-                    <i class="fa-solid fa-file-invoice"></i> <span style="font-size: 0.9em;">Overdue Hoods</span>
+                    <i class="fa-solid fa-file-invoice"></i> <span class="text-sm">Overdue Hoods</span>
                 </a>
                 <a href="{{ url_for('hoods.list_hoods', filter='Due1Week') }}" class="nav-item {% if 'hood' in request.endpoint and request.args.get('filter') == 'Due1Week' %}active{% endif %}">
-                    <i class="fa-solid fa-calendar-week"></i> <span style="font-size: 0.9em;">Due in 7 Days</span>
+                    <i class="fa-solid fa-calendar-week"></i> <span class="text-sm">Due in 7 Days</span>
                 </a>
                 <a href="{{ url_for('hoods.list_hoods', filter='Due2Months') }}" class="nav-item {% if 'hood' in request.endpoint and request.args.get('filter') == 'Due2Months' %}active{% endif %}">
-                    <i class="fa-solid fa-calendar-days"></i> <span style="font-size: 0.9em;">Due in 2 Months</span>
+                    <i class="fa-solid fa-calendar-days"></i> <span class="text-sm">Due in 2 Months</span>
                 </a>
                 <a href="{{ url_for('hoods.list_hoods', filter='ActionTaken') }}" class="nav-item {% if 'hood' in request.endpoint and request.args.get('filter') == 'ActionTaken' %}active{% endif %}">
-                    <i class="fa-solid fa-clipboard-list"></i> <span style="font-size: 0.9em;">Action Required</span>
+                    <i class="fa-solid fa-clipboard-list"></i> <span class="text-sm">Action Required</span>
                 </a>
 
-                <div style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 0.5rem; width: 80%; margin-left:10%;"></div>
+                <div class="sidebar-divider"></div>
 
                 <a href="{{ url_for('settings.org_settings') }}" class="nav-item {% if request.endpoint == 'settings.org_settings' %}active{% endif %}">
                     <i class="fa-solid fa-gear"></i> <span>Settings</span>
@@ -83,18 +83,18 @@
                         <i class="fa-solid fa-bars"></i>
                     </button>
                     <!-- Desktop sidebar collapse button -->
-                    <button id="desktop-sidebar-toggle" class="icon-btn d-none-md ms-3" style="margin-left: 0.5rem;" title="Toggle Sidebar">
+                    <button id="desktop-sidebar-toggle" class="icon-btn d-none-md ms-3" title="Toggle Sidebar">
                         <i class="fa-solid fa-bars-staggered"></i>
                     </button>
                 </div>
                 <!-- User Profile and Theme Toggle -->
-                <div class="navbar-right" style="display:flex; align-items:center; gap:1.5rem;">
+                <div class="navbar-right d-flex align-items-center gap-6">
 
                     <!-- Organization Switcher -->
                     {% if all_orgs %}
-                    <div class="org-switcher" style="padding-right: 1.5rem; border-right: 1px solid var(--border);">
-                        <form action="{{ url_for('dashboard.set_org') }}" method="POST" style="margin: 0;">
-                            <select name="org_id" class="form-select" onchange="this.form.submit()" style="background-color: var(--input); color: var(--text-main); border: 1px solid var(--border); border-radius: 6px; padding: 0.35rem 2rem 0.35rem 0.75rem; font-size: 0.875rem; font-weight: 500; cursor: pointer;">
+                    <div class="org-switcher">
+                        <form action="{{ url_for('dashboard.set_org') }}" method="POST" class="m-0">
+                            <select name="org_id" class="form-select text-sm fw-bold" onchange="this.form.submit()">
                                 {% for org in all_orgs %}
                                 <option value="{{ org.id }}" {% if current_org and current_org.id == org.id %}selected{% endif %}>{{ org.name }}</option>
                                 {% endfor %}
@@ -111,7 +111,7 @@
                     <div class="user-profile">
                         <img src="https://ui-avatars.com/api/?name=Admin+User&background=10b981&color=fff&bold=true" alt="User Avatar" class="avatar">
                         <span class="username">Admin User</span>
-                        <i class="fa-solid fa-chevron-down" style="color: var(--text-muted); font-size: 0.8rem;"></i>
+                        <i class="fa-solid fa-chevron-down text-muted text-sm"></i>
                     </div>
                 </div>
             </header>
@@ -120,10 +120,10 @@
             <main class="container">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                   {% if messages %}
-                    <div class="flash-messages" style="margin-bottom: 2rem;">
+                    <div class="flash-messages mb-8">
                       {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}" style="padding: 1rem; border-radius: 6px; background: {% if category == 'error' %}var(--danger-light){% else %}var(--primary-light){% endif %}; color: {% if category == 'error' %}var(--danger){% else %}var(--primary){% endif %}; border-left: 4px solid {% if category == 'error' %}var(--danger){% else %}var(--primary){% endif %};">
-                            <i class="fa-solid {% if category == 'error' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}" style="margin-right:0.5rem;"></i>
+                        <div class="alert {% if category == 'error' %}alert-error{% else %}alert-success{% endif %}">
+                            <i class="fa-solid {% if category == 'error' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %} mr-2"></i>
                             {{ message }}
                         </div>
                       {% endfor %}
@@ -139,19 +139,19 @@
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
     <!-- Global Delete Custom Modal -->
-    <div class="modal-overlay" id="global-delete-modal">
+    <div class="modal-overlay" id="global-event-modal">
         <div class="custom-modal">
             <div class="custom-modal-header">
-                <h3><i class="fa-solid fa-triangle-exclamation" style="color:var(--danger)"></i> <span id="modal-title">Confirm Action</span></h3>
+                <h3><i class="fa-solid fa-triangle-exclamation text-danger"></i> <span id="modal-title">Confirm Action</span></h3>
                 <button class="close-modal-btn" id="close-modal-btn">&times;</button>
             </div>
             <div class="custom-modal-body">
-                <p id="delete-modal-message">Are you sure? This action cannot be undone.</p>
+                <p id="event-modal-message">Are you sure? This action cannot be undone.</p>
             </div>
             <div class="custom-modal-footer">
                 <button class="btn-secondary" id="cancel-delete-btn">Cancel</button>
-                <form id="global-delete-form" method="POST" style="margin:0; display:none;">
-                    <button type="submit" class="btn-primary" id="modal-submit-btn" style="background:var(--danger); border-color:var(--danger);">Yes, Delete</button>
+                <form id="global-event-form" method="POST" class="m-0" style="display:none;">
+                    <button type="submit" class="btn-danger" id="modal-submit-btn">Yes, Delete</button>
                 </form>
                 <button class="btn-primary" id="modal-action-btn" style="display:none;" onclick="">Confirm</button>
             </div>
@@ -160,46 +160,46 @@
 
     <script>
         // Delete Modal Logic
-        const deleteModal = document.getElementById('global-delete-modal');
-        const deleteForm = document.getElementById('global-delete-form');
-        const deleteMessage = document.getElementById('delete-modal-message');
+        const eventModal = document.getElementById('global-event-modal');
+        const eventForm = document.getElementById('global-event-form');
+        const eventMessage = document.getElementById('event-modal-message');
 
-        function openDeleteModal(actionUrl, message) {
-            deleteForm.action = actionUrl;
-            deleteForm.style.display = 'block';
+        function openeventModal(actionUrl, message) {
+            eventForm.action = actionUrl;
+            eventForm.style.display = 'block';
             document.getElementById('modal-action-btn').style.display = 'none';
             document.getElementById('modal-submit-btn').style.background = 'var(--danger)';
             document.getElementById('modal-submit-btn').style.borderColor = 'var(--danger)';
             document.getElementById('modal-submit-btn').textContent = 'Yes, Delete';
             document.getElementById('modal-title').textContent = 'Confirm Deletion';
-            deleteMessage.textContent = message;
-            deleteModal.classList.add('active');
+            eventMessage.textContent = message;
+            eventModal.classList.add('active');
         }
 
         function openConfirmModal(message, callback, btnText, btnColor) {
-            deleteForm.style.display = 'none';
+            eventForm.style.display = 'none';
             const actionBtn = document.getElementById('modal-action-btn');
             actionBtn.style.display = 'inline-block';
             actionBtn.textContent = btnText || 'Confirm';
             actionBtn.style.background = btnColor || 'var(--primary)';
             actionBtn.style.borderColor = btnColor || 'var(--primary)';
-            actionBtn.onclick = function() { closeDeleteModal(); callback(); };
+            actionBtn.onclick = function() { closeeventModal(); callback(); };
             document.getElementById('modal-title').textContent = 'Confirm Action';
-            deleteMessage.textContent = message;
-            deleteModal.classList.add('active');
+            eventMessage.textContent = message;
+            eventModal.classList.add('active');
         }
 
-        function closeDeleteModal() {
-            deleteModal.classList.remove('active');
+        function closeeventModal() {
+            eventModal.classList.remove('active');
         }
 
-        document.getElementById('close-modal-btn').addEventListener('click', closeDeleteModal);
-        document.getElementById('cancel-delete-btn').addEventListener('click', closeDeleteModal);
+        document.getElementById('close-modal-btn').addEventListener('click', closeeventModal);
+        document.getElementById('cancel-delete-btn').addEventListener('click', closeeventModal);
 
         // Close modal if clicking outside the box
-        deleteModal.addEventListener('click', function(e) {
-            if (e.target === deleteModal) {
-                closeDeleteModal();
+        eventModal.addEventListener('click', function(e) {
+            if (e.target === eventModal) {
+                closeeventModal();
             }
         });
         // DOM Elements

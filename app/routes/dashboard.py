@@ -13,7 +13,13 @@ dashboard_bp = Blueprint('dashboard', __name__)
 def dashboard():
     org_id = get_current_org_id()
     if not org_id:
-        return render_template('index.html', empty_state=True, status_chart=None, dept_chart=None, tests_chart=None, total=0)
+        return render_template('index.html',
+            empty_state=True,
+            status_chart=None,
+            dept_chart=None,
+            tests_chart=None,
+            total=0
+        )
 
     hoods = Fumehood.query.join(Room).join(Floor).join(Building).filter(Building.org_id == org_id).all()
 
@@ -71,10 +77,11 @@ def dashboard():
     }
 
     return render_template('index.html',
-                           status_chart=status_chart,
-                           dept_chart=dept_chart,
-                           tests_chart=tests_chart,
-                           total=len(hoods))
+        status_chart=status_chart,
+        dept_chart=dept_chart,
+        tests_chart=tests_chart,
+        total=len(hoods)
+    )
 
 
 @dashboard_bp.route('/set_org', methods=['POST'])

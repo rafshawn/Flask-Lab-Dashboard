@@ -11,7 +11,7 @@
             <label for="campus">Campus Prefix (Optional)</label>
             <input type="text" id="campus" name="campus" value="{{ building.campus or '' }}">
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="d-grid grid-2 gap-4">
             <div class="form-group">
                 <label for="address_1">Address Line 1</label>
                 <input type="text" id="address_1" name="address_1" value="{{ building.address_1 or '' }}">
@@ -21,7 +21,7 @@
                 <input type="text" id="address_2" name="address_2" value="{{ building.address_2 or '' }}">
             </div>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+        <div class="d-grid grid-3 gap-4">
             <div class="form-group">
                 <label for="city">City</label>
                 <input type="text" id="city" name="city" value="{{ building.city or '' }}">

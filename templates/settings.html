@@ -1,32 +1,32 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-    <h2><i class="fa-solid fa-gear" style="color:var(--primary);"></i> Organization Settings</h2>
+<div class="page-header">
+    <h2><i class="fa-solid fa-gear text-primary"></i> Organization Settings</h2>
 </div>
 
 <!-- General Preferences -->
-<div class="widget" style="margin-bottom: 2rem;">
+<div class="widget mb-8">
     <h2>General Preferences</h2>
     <form method="POST" action="{{ url_for('settings.org_settings') }}">
-        <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem;">
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: var(--background); border-radius: 8px; border: 1px solid var(--border);">
+        <div class="d-flex flex-column gap-6 mt-4">
+            <div class="d-flex align-items-center justify-content-between p-4 bg-background border-border" style="background: var(--background); border-radius: 8px; border: 1px solid var(--border);">
                 <div>
                     <strong>Default Face Velocity (FPM)</strong>
-                    <p style="color: var(--text-muted); margin: 0.25rem 0 0; font-size: 0.9rem;">The default design spec face velocity for new fumehoods (e.g. 100 FPM standard, 80 FPM for Core Science).</p>
+                    <p class="text-muted text-sm mt-1 mb-0">The default design spec face velocity for new fumehoods (e.g. 100 FPM standard, 80 FPM for Core Science).</p>
                 </div>
-                <input type="number" name="face_velocity_default" value="{{ settings.face_velocity_default if settings else 100 }}" step="0.1" min="0" style="width: 100px; background: var(--input); color: var(--text-main); border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem; text-align: center; font-size: 1rem; margin-left: 1rem;">
+                <input type="number" name="face_velocity_default" value="{{ settings.face_velocity_default if settings else 100 }}" step="0.1" min="0" class="form-control ms-3 text-center" style="width: 100px;">
             </div>
         </div>
-        <div style="margin-top: 1.5rem; text-align: right;">
+        <div class="mt-6 text-end" style="text-align: right;">
             <button type="submit" class="btn-primary"><i class="fa-solid fa-save"></i> Save Preferences</button>
         </div>
     </form>
 </div>
 
 <!-- Custom Test Types Manager -->
-<div class="widget" style="margin-bottom: 2rem;">
+<div class="widget mb-8">
     <h2>Custom Test Types</h2>
-    <p style="color: var(--text-muted); margin-bottom: 1rem;">Define custom test fields that appear on fumehood profiles. Admins can create, activate/deactivate, and delete test types. Choose a field type to control how data is entered.</p>
+    <p class="text-muted mb-4">Define custom test fields that appear on fumehood profiles. Admins can create, activate/deactivate, and delete test types. Choose a field type to control how data is entered.</p>
 
     <div class="apex-table-card">
         <table class="table align-middle">
@@ -42,50 +42,50 @@
             <tbody>
                 {% for ct in custom_tests %}
                 <tr>
-                    <td style="color: var(--text-muted);">{{ loop.index }}</td>
-                    <td style="font-weight: 600;">{{ ct.name }}</td>
+                    <td class="text-muted">{{ loop.index }}</td>
+                    <td class="fw-bold">{{ ct.name }}</td>
                     <td>
                         {% if ct.field_type == 'date' %}
-                            <span class="badge" style="background: rgba(59,130,246,0.15); color: #3b82f6; font-size: 0.75rem;"><i class="fa-solid fa-calendar"></i> Date</span>
+                            <span class="badge badge-info"><i class="fa-solid fa-calendar"></i> Date</span>
                         {% elif ct.field_type == 'text' %}
-                            <span class="badge" style="background: rgba(139,92,246,0.15); color: #8b5cf6; font-size: 0.75rem;"><i class="fa-solid fa-font"></i> Text</span>
+                            <span class="badge badge-info"><i class="fa-solid fa-font"></i> Text</span>
                         {% elif ct.field_type == 'number' %}
-                            <span class="badge" style="background: rgba(245,158,11,0.15); color: #f59e0b; font-size: 0.75rem;"><i class="fa-solid fa-hashtag"></i> Number</span>
+                            <span class="badge badge-maintenance"><i class="fa-solid fa-hashtag"></i> Number</span>
                         {% elif ct.field_type == 'pass_fail' %}
-                            <span class="badge" style="background: rgba(16,185,129,0.15); color: #10b981; font-size: 0.75rem;"><i class="fa-solid fa-check-double"></i> Pass/Fail</span>
+                            <span class="badge badge-active"><i class="fa-solid fa-check-double"></i> Pass/Fail</span>
                         {% endif %}
                     </td>
                     <td>
                         {% if ct.is_active %}
-                            <span class="badge badge-active" style="font-size: 0.75rem;">Active</span>
+                            <span class="badge badge-active text-sm">Active</span>
                         {% else %}
-                            <span class="badge" style="background: rgba(156,163,175,0.2); color: var(--text-muted); font-size: 0.75rem;">Inactive</span>
+                            <span class="badge badge-decommissioned">Inactive</span>
                         {% endif %}
                     </td>
                     <td class="text-end">
-                        <div class="action-buttons" style="display:flex; gap:0.25rem; justify-content:flex-end;">
-                            <form method="POST" action="{{ url_for('settings.toggle_custom_test_type', id=ct.id) }}" style="margin:0;">
+                        <div class="action-buttons d-flex justify-content-end gap-1">
+                            <form method="POST" action="{{ url_for('settings.toggle_custom_test_type', id=ct.id) }}" class="m-0">
                                 <button type="submit" class="btn-icon" title="{{ 'Deactivate' if ct.is_active else 'Activate' }}">
-                                    <i class="fa-solid {{ 'fa-toggle-on' if ct.is_active else 'fa-toggle-off' }}" style="color: {{ 'var(--primary)' if ct.is_active else 'var(--text-muted)' }};"></i>
+                                    <i class="fa-solid {{ 'fa-toggle-on text-primary' if ct.is_active else 'fa-toggle-off text-muted' }}"></i>
                                 </button>
                             </form>
-                            <button type="button" onclick="openDeleteModal('{{ url_for('settings.delete_custom_test_type', id=ct.id) }}', 'Delete custom test type: {{ ct.name }}? All saved values for this test on fumehoods will also be removed.')" class="btn-icon" title="Delete" style="color: var(--danger);">
+                            <button type="button" onclick="openeventModal('{{ url_for('settings.delete_custom_test_type', id=ct.id) }}', 'Delete custom test type: {{ ct.name }}? All saved values for this test on fumehoods will also be removed.')" class="btn-icon text-danger" title="Delete">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </div>
                     </td>
                 </tr>
                 {% else %}
-                <tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:1.5rem;">No custom test types defined yet.</td></tr>
+                <tr><td colspan="5" class="text-center text-muted p-6">No custom test types defined yet.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
     <!-- Add New Custom Test Type -->
-    <form method="POST" action="{{ url_for('settings.add_custom_test_type') }}" style="margin-top: 1.5rem; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-        <input type="text" name="name" placeholder="Test name (e.g. Tracer Gas Test)..." required style="flex: 1; min-width: 200px; background: var(--background); color: var(--text-main); border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem 1rem; font-size: 0.95rem;">
-        <select name="field_type" style="background: var(--background); color: var(--text-main); border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem 0.75rem; font-size: 0.95rem;">
+    <form method="POST" action="{{ url_for('settings.add_custom_test_type') }}" class="mt-6 d-flex align-items-center flex-wrap gap-3">
+        <input type="text" name="name" placeholder="Test name (e.g. Tracer Gas Test)..." required class="form-control flex-1" style="min-width: 200px;">
+        <select name="field_type" class="form-select w-auto">
             <option value="date">📅 Date</option>
             <option value="text">📝 Text</option>
             <option value="number">🔢 Number</option>
@@ -98,7 +98,7 @@
 <!-- Action Options Manager -->
 <div class="widget">
     <h2>Action Options</h2>
-    <p style="color: var(--text-muted); margin-bottom: 1rem;">Manage the dropdown choices available for the "Action Taken" field on fumehoods. Default options cannot be deleted.</p>
+    <p class="text-muted mb-4">Manage the dropdown choices available for the "Action Taken" field on fumehoods. Default options cannot be deleted.</p>
 
     <div class="apex-table-card">
         <table class="table align-middle">
@@ -113,22 +113,22 @@
             <tbody>
                 {% for action in actions %}
                 <tr>
-                    <td style="color: var(--text-muted);">{{ loop.index }}</td>
-                    <td style="font-weight: 600;">{{ action.label }}</td>
+                    <td class="text-muted">{{ loop.index }}</td>
+                    <td class="fw-bold">{{ action.label }}</td>
                     <td>
                         {% if action.is_default %}
-                            <span class="badge badge-active" style="font-size: 0.75rem;">Default</span>
+                            <span class="badge badge-active text-sm">Default</span>
                         {% else %}
-                            <span class="badge badge-maintenance" style="font-size: 0.75rem;">Custom</span>
+                            <span class="badge badge-maintenance text-sm">Custom</span>
                         {% endif %}
                     </td>
                     <td class="text-end">
                         {% if not action.is_default %}
-                        <button type="button" onclick="openDeleteModal('{{ url_for('settings.delete_action_option', id=action.id) }}', 'Are you sure you want to delete the action option: {{ action.label }}?')" class="btn-icon" title="Delete" style="color: var(--danger);">
+                        <button type="button" onclick="openeventModal('{{ url_for('settings.delete_action_option', id=action.id) }}', 'Are you sure you want to delete the action option: {{ action.label }}?')" class="btn-icon text-danger" title="Delete">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                         {% else %}
-                        <span style="color: var(--text-muted); font-size: 0.8rem;"><i class="fa-solid fa-lock"></i></span>
+                        <span class="text-muted text-sm"><i class="fa-solid fa-lock"></i></span>
                         {% endif %}
                     </td>
                 </tr>
@@ -138,8 +138,8 @@
     </div>
 
     <!-- Add New Action -->
-    <form method="POST" action="{{ url_for('settings.add_action_option') }}" style="margin-top: 1.5rem; display: flex; gap: 0.75rem; align-items: center;">
-        <input type="text" name="label" placeholder="New action label..." required style="flex: 1; background: var(--background); color: var(--text-main); border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem 1rem; font-size: 0.95rem;">
+    <form method="POST" action="{{ url_for('settings.add_action_option') }}" class="mt-6 d-flex align-items-center gap-3">
+        <input type="text" name="label" placeholder="New action label..." required class="form-control flex-1">
         <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Action</button>
     </form>
 </div>

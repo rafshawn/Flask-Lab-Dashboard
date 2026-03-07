@@ -1,20 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
+
 {% if empty_state %}
-<div class="empty-state" style="text-align: center; padding: 4rem 2rem; background: var(--input); border: 1px dashed var(--border); border-radius: 12px; margin-top: 2rem;">
-    <i class="fa-solid fa-wind" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1.5rem;"></i>
+<div class="empty-state">
+    <i class="fa-solid fa-wind text-3xl text-muted mb-6"></i>
     <h2>No Fumehoods Found</h2>
-    <p style="color: var(--text-muted); max-width: 500px; margin: 1rem auto; line-height: 1.6;">
+    <p class="text-muted lh-base" style="max-width: 500px; margin: 1rem auto;">
         You haven't set up any organizations or fumehoods yet. Create an organization first to start tracking your equipment.
     </p>
-    <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 1rem;">
-        <a href="{{ url_for('organizations.add_org') }}" class="btn-primary" style="font-size: 1.1rem; padding: 0.75rem 1.5rem;">
+    <div class="d-flex justify-content-center gap-4 mt-8">
+        <a href="{{ url_for('organizations.add_org') }}" class="btn-primary text-lg px-6 py-3">
             <i class="fa-solid fa-plus"></i> Add Organization
         </a>
     </div>
 </div>
 {% else %}
-<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+
+<div class="page-header">
     <h2>
         {% if current_filter == 'Overdue' %}Overdue Hoods
         {% elif current_filter == 'Due1Week' %}Due in 7 Days
@@ -24,11 +26,19 @@
         {% elif current_filter == 'Maintenance' %}Hoods in Maintenance
         {% else %}All Fumehoods{% endif %}
     </h2>
-    <div style="display: flex; gap: 0.5rem;">
-        <button class="btn-secondary" onclick="openConfirmModal('Email reporting will be enabled in a future update once the SMTP server is configured.', function(){}, 'OK', '#4b5563')" title="Email Report (Coming Soon)">
+    <div class="d-flex gap-2">
+        <button
+            class="btn-secondary"
+            onclick="openConfirmModal('Email reporting will be enabled in a future update once the SMTP server is configured.', function(){}, 'OK', '#4b5563')"
+            title="Email Report (Coming Soon)"
+        >
             <i class="fa-solid fa-envelope"></i> Email Report
         </button>
-        <a href="{{ url_for('hoods.print_hoods', filter=current_filter) }}" target="_blank" class="btn-primary" style="background-color: var(--text-main); border-color: var(--text-main);">
+        <a
+            href="{{ url_for('hoods.print_hoods', filter=current_filter) }}"
+            target="_blank"
+            class="btn-accent"
+        >
             <i class="fa-solid fa-file-pdf"></i> Generate Report
         </a>
         <a href="{{ url_for('hoods.add_hood') }}" class="btn-primary">
@@ -62,8 +72,8 @@
         <tbody>
             {% for hood in hoods %}
             <tr>
-                <td style="font-weight:600;">
-                    <a href="{{ url_for('hoods.hood_detail', id=hood.id) }}" style="color:var(--primary); text-decoration:none;">{{ hood.hood_id }}</a>
+                <td class="fw-bold">
+                    <a href="{{ url_for('hoods.hood_detail', id=hood.id) }}" class="text-primary">{{ hood.hood_id }}</a>
                 </td>
                 <td>{{ hood.room.building_name }} {{ hood.room.room_no }}</td>
                 <td>{{ hood.dept|default('-', true) }}</td>

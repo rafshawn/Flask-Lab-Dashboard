@@ -11,10 +11,10 @@
             <label for="logo">Organization Logo (Optional - upload new to replace)</label>
             <input type="file" id="logo" name="logo" accept="image/*">
             {% if org.logo_path %}
-            <small style="display:block; margin-top:0.5rem; color:var(--text-muted);">Current logo: {{ org.logo_path.split('/')[-1] }}</small>
+            <small class="d-block mt-2 text-muted">Current logo: {{ org.logo_path.split('/')[-1] }}</small>
             {% endif %}
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="d-grid grid-2 gap-4">
             <div class="form-group">
                 <label for="address_1">Address Line 1</label>
                 <input type="text" id="address_1" name="address_1" value="{{ org.address_1 or '' }}">
@@ -24,7 +24,7 @@
                 <input type="text" id="address_2" name="address_2" value="{{ org.address_2 or '' }}">
             </div>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+        <div class="d-grid grid-3 gap-4">
             <div class="form-group">
                 <label for="city">City</label>
                 <input type="text" id="city" name="city" value="{{ org.city or '' }}">
@@ -38,7 +38,7 @@
                 <input type="text" id="zip_code" name="zip_code" value="{{ org.zip_code or '' }}">
             </div>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="d-grid grid-2 gap-4">
             <div class="form-group">
                 <label for="phone">Phone</label>
                 <input type="text" id="phone" name="phone" value="{{ org.phone or '' }}">
