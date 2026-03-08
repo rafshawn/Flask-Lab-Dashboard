@@ -42,7 +42,7 @@
             <button class="btn-outline-dashed" onclick="openConfirmModal('Email reporting will be enabled in a future update once the SMTP server is configured.', function(){}, 'OK', '#4b5563')" title="Email Report (Coming Soon)">
                 <i class="fa-solid fa-envelope"></i>
             </button>
-            <a href="{{ url_for('hoods.print_hoods', filter=current_filter) }}" target="_blank" class="btn-outline-dashed">
+            <a id="reportLink" href="{{ url_for('hoods.print_hoods', filter=current_filter) }}" target="_blank" class="btn-outline-dashed">
                 <i class="fa-solid fa-file-pdf"></i> Report
             </a>
             <a href="{{ url_for('hoods.add_hood') }}" class="btn-primary input-sm d-flex align-items-center gap-2">
@@ -123,6 +123,7 @@
                     let api = this.api();
                     $('#customSearch').on('keyup', function() {
                         api.search(this.value).draw();
+                        updateReportLink();
                     });
                 }
             });
@@ -146,11 +147,33 @@
         }
     }
 
+    function updateReportLink() {
+        let baseUrl = "{{ url_for('hoods.print_hoods') }}";
+        let params = new URLSearchParams();
+        // Preserve server-side filter if set
+        let serverFilter = "{{ current_filter|default('All', true) }}";
+        if (serverFilter && serverFilter !== 'All') params.set('filter', serverFilter);
+        // Client-side status filter (column 3)
+        if (dtTable) {
+            let statusFilter = dtTable.column(3).search();
+            if (statusFilter) params.set('status', statusFilter);
+            // Client-side condition filter (column 6)
+            let condFilter = dtTable.column(6).search();
+            if (condFilter) params.set('condition', condFilter);
+            // Search text
+            let searchVal = dtTable.search();
+            if (searchVal) params.set('q', searchVal);
+        }
+        let qs = params.toString();
+        document.getElementById('reportLink').href = baseUrl + (qs ? '?' + qs : '');
+    }
+
     function clearFilters() {
         if (!dtTable) return;
         dtTable.search('').columns().search('').draw();
         $('#customSearch').val('');
         updateFilterButtons(null);
+        updateReportLink();
     }
 
     function filterTable(val) {
@@ -163,6 +186,7 @@
              dtTable.column(3).search('').draw();
              updateFilterButtons(null);
         }
+        updateReportLink();
     }
 
     function filterCondition(val) {
@@ -170,6 +194,7 @@
         dtTable.column(3).search(''); // Clear Status filter
         dtTable.column(6).search(val).draw();
         updateFilterButtons('expired');
+        updateReportLink();
     }
 </script>
 {% endif %}

@@ -282,10 +282,14 @@ def add_cycle(id):
 @hoods_bp.route('/reports/hoods')
 def print_hoods():
     filter_type = request.args.get('filter', 'All')
+    status_filter = request.args.get('status', '')
+    condition_filter = request.args.get('condition', '')
+    search_q = request.args.get('q', '').lower()
     org_id = get_current_org_id()
     all_hoods = Fumehood.query.join(Room).join(Floor).join(Building).filter(Building.org_id == org_id).all() if org_id else []
 
     hoods = []
+    title = "All Fumehoods"
     today = date.today()
     for h in all_hoods:
         if filter_type == 'All':
@@ -311,6 +315,20 @@ def print_hoods():
         elif filter_type == 'ActionTaken':
             title = "Action Required Report"
             if h.action_taken_id is not None: hoods.append(h)
+
+    # Apply client-side filters passed via query params
+    if status_filter:
+        hoods = [h for h in hoods if h.status == status_filter]
+        title = f"{status_filter} Fumehoods Report"
+    if condition_filter:
+        if condition_filter.upper() == 'EXPIRED':
+            hoods = [h for h in hoods if h.is_expired(today)]
+            title = "Expired Fumehoods Report"
+    if search_q:
+        def matches_search(h):
+            searchable = f"{h.hood_id} {h.room.building_name} {h.room.room_no} {h.dept or ''} {h.status}".lower()
+            return search_q in searchable
+        hoods = [h for h in hoods if matches_search(h)]
 
     return render_template('print_report.html', title=title, items=hoods, report_type="hoods")
 
