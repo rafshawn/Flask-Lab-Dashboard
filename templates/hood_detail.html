@@ -102,6 +102,12 @@
 </div>
 
 <h2>Testing History</h2>
+<div class="d-flex align-items-center gap-2 mb-4">
+    <label class="text-muted text-sm">From</label>
+    <input type="date" id="dateFrom" class="form-control input-sm" style="width:140px;">
+    <label class="text-muted text-sm">To</label>
+    <input type="date" id="dateTo" class="form-control input-sm" style="width:140px;">
+</div>
 <div class="rounded-md border border-border mt-4" style="overflow-x:auto;">
     <table id="testHistoryTable" class="data-table w-100 table align-middle">
         <thead>
@@ -136,9 +142,10 @@
 </div>
 
 <script>
+    let dtTestTable;
     $(document).ready(function() {
         if ($('#testHistoryTable tbody tr td').length > 1) {
-            $('#testHistoryTable').DataTable({
+            dtTestTable = $('#testHistoryTable').DataTable({
                 responsive: true,
                 pageLength: 10,
                 language: {
@@ -153,6 +160,47 @@
                 ]
             });
         }
+
+        // Date range filter
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            if (settings.nTable.id !== 'testHistoryTable') return true;
+            let dateFrom = $('#dateFrom').val();
+            let dateTo = $('#dateTo').val();
+            if (!dateFrom && !dateTo) return true;
+            let testDate = data[0] || '';
+            if (!testDate) return false;
+            if (dateFrom && testDate < dateFrom) return false;
+            if (dateTo && testDate > dateTo) return false;
+            return true;
+        });
+
+        $('#dateFrom, #dateTo').on('change', function() {
+            if (dtTestTable) {
+                dtTestTable.draw();
+                updateHoodReportLink();
+            }
+        });
     });
+
+    function updateHoodReportLink() {
+        let baseUrl = "{{ url_for('hoods.print_hood_detail', id=hood.id) }}";
+        let params = new URLSearchParams();
+        if (dtTestTable) {
+            let order = dtTestTable.order();
+            if (order.length) {
+                let colNames = ['test_date','wo_report','technologist','test_rating','cycles'];
+                params.set('sort', colNames[order[0][0]] || order[0][0]);
+                params.set('dir', order[0][1]);
+            }
+            let searchVal = dtTestTable.search();
+            if (searchVal) params.set('q', searchVal);
+        }
+        let dateFrom = document.getElementById('dateFrom').value;
+        let dateTo = document.getElementById('dateTo').value;
+        if (dateFrom) params.set('date_from', dateFrom);
+        if (dateTo) params.set('date_to', dateTo);
+        let qs = params.toString();
+        document.querySelector('a[href*="print_hood_detail"]').href = baseUrl + (qs ? '?' + qs : '');
+    }
 </script>
 {% endblock %}

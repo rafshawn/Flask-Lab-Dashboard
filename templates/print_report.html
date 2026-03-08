@@ -61,7 +61,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for test in hood.tests %}
+            {% for test in tests %}
             <tr>
                 <td>{{ test.test_date }}</td>
                 <td>{{ test.technologist|default('-', true) }}</td>
@@ -78,7 +78,7 @@
     {% elif report_type == 'room_detail' %}
     <p><strong>Building:</strong> {{ room.building_name }}</p>
     <p><strong>Room:</strong> {{ room.room_no }}</p>
-    <p><strong>Fumehoods:</strong> {{ room.hoods|length }}</p>
+    <p><strong>Fumehoods:</strong> {{ hoods|length }}</p>
 
     <h2>Fumehoods in Room</h2>
     <table>
@@ -91,7 +91,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for hood in room.hoods %}
+            {% for hood in hoods %}
             <tr>
                 <td>{{ hood.hood_id }}</td>
                 <td>{{ hood.status }}</td>

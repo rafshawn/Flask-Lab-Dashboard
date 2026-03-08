@@ -8,7 +8,7 @@
         <h2 style="margin:0;">{{ room.building_name }} - Room {{ room.room_no }}</h2>
     </div>
     <div style="display:flex; gap:0.5rem;">
-        <a href="{{ url_for('organizations.print_room_report', id=room.id) }}" target="_blank" class="btn-outline-dashed">
+        <a id="roomReportLink" href="{{ url_for('organizations.print_room_report', id=room.id) }}" target="_blank" class="btn-outline-dashed">
             <i class="fa-solid fa-file-pdf"></i> Report
         </a>
         <a href="{{ url_for('organizations.edit_room', id=room.id) }}" class="btn-primary"><i class="fa-solid fa-pencil"></i> Edit Room</a>
@@ -52,9 +52,10 @@
 </div>
 
 <script>
+    let dtRoomTable;
     $(document).ready(function() {
         if ($('#roomHoodsTable tbody tr td').length > 1) {
-            $('#roomHoodsTable').DataTable({
+            dtRoomTable = $('#roomHoodsTable').DataTable({
                 responsive: true,
                 pageLength: 10,
                 language: {
@@ -67,9 +68,32 @@
                 columnDefs: [
                     { orderable: false, targets: 4 },
                     { orderSequence: ['asc', 'desc', ''], targets: '_all' }
-                ]
+                ],
+                initComplete: function() {
+                    let api = this.api();
+                    api.on('order.dt search.dt', function() {
+                        updateRoomReportLink();
+                    });
+                }
             });
         }
     });
+
+    function updateRoomReportLink() {
+        let baseUrl = "{{ url_for('organizations.print_room_report', id=room.id) }}";
+        let params = new URLSearchParams();
+        if (dtRoomTable) {
+            let order = dtRoomTable.order();
+            if (order.length) {
+                let colNames = ['hood_id','status','make_model','size','actions'];
+                params.set('sort', colNames[order[0][0]] || order[0][0]);
+                params.set('dir', order[0][1]);
+            }
+            let searchVal = dtRoomTable.search();
+            if (searchVal) params.set('q', searchVal);
+        }
+        let qs = params.toString();
+        document.getElementById('roomReportLink').href = baseUrl + (qs ? '?' + qs : '');
+    }
 </script>
 {% endblock %}

@@ -35,6 +35,14 @@
             <button class="btn-outline-dashed" onclick="clearFilters()" id="filter-clear" style="display:none;">
                 <i class="fa-solid fa-xmark"></i> Clear Filters
             </button>
+
+            <!-- Date Range -->
+            <div class="d-flex align-items-center gap-2 date-range-group">
+                <label class="text-muted text-sm">From</label>
+                <input type="date" id="dateFrom" class="form-control input-sm" style="width:140px;">
+                <label class="text-muted text-sm">To</label>
+                <input type="date" id="dateTo" class="form-control input-sm" style="width:140px;">
+            </div>
         </div>
 
         <!-- Actions -->
@@ -125,6 +133,9 @@
                         api.search(this.value).draw();
                         updateReportLink();
                     });
+                    api.on('order.dt', function() {
+                        updateReportLink();
+                    });
                 }
             });
         }
@@ -163,7 +174,19 @@
             // Search text
             let searchVal = dtTable.search();
             if (searchVal) params.set('q', searchVal);
+            // Sort order
+            let order = dtTable.order();
+            if (order.length) {
+                let colNames = ['hood_id','room','dept','status','last_certified','expiration','condition','actions'];
+                params.set('sort', colNames[order[0][0]] || order[0][0]);
+                params.set('dir', order[0][1]);
+            }
         }
+        // Date range
+        let dateFrom = document.getElementById('dateFrom').value;
+        let dateTo = document.getElementById('dateTo').value;
+        if (dateFrom) params.set('date_from', dateFrom);
+        if (dateTo) params.set('date_to', dateTo);
         let qs = params.toString();
         document.getElementById('reportLink').href = baseUrl + (qs ? '?' + qs : '');
     }
@@ -172,7 +195,11 @@
         if (!dtTable) return;
         dtTable.search('').columns().search('').draw();
         $('#customSearch').val('');
+        $('#dateFrom').val('');
+        $('#dateTo').val('');
         updateFilterButtons(null);
+        // Redraw to clear date filter
+        dtTable.draw();
         updateReportLink();
     }
 
@@ -196,6 +223,29 @@
         updateFilterButtons('expired');
         updateReportLink();
     }
+
+    // Date range custom filter for DataTables
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        if (settings.nTable.id !== 'hoodsTable') return true;
+        let dateFrom = $('#dateFrom').val();
+        let dateTo = $('#dateTo').val();
+        if (!dateFrom && !dateTo) return true;
+        // Use Expiration column (index 5)
+        let expDate = data[5] || '';
+        if (expDate === 'N/A' || !expDate) return false;
+        if (dateFrom && expDate < dateFrom) return false;
+        if (dateTo && expDate > dateTo) return false;
+        return true;
+    });
+
+    $(document).ready(function() {
+        $('#dateFrom, #dateTo').on('change', function() {
+            if (dtTable) {
+                dtTable.draw();
+                updateReportLink();
+            }
+        });
+    });
 </script>
 {% endif %}
 {% endblock %}

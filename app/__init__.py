@@ -19,7 +19,7 @@ def create_app():
     # Configuration
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'fumehoods.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.secret_key = 'super_secret_dev_key'
+    app.secret_key = os.urandom(24)  # Random per startup — forces fresh login on restart
 
     upload_folder = os.path.join(basedir, 'static', 'uploads')
     app.config['UPLOAD_FOLDER'] = upload_folder

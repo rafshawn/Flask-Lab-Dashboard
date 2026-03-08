@@ -330,13 +330,90 @@ def print_hoods():
             return search_q in searchable
         hoods = [h for h in hoods if matches_search(h)]
 
+    # Date range filter (on expiration date)
+    date_from = request.args.get('date_from', '')
+    date_to = request.args.get('date_to', '')
+    if date_from or date_to:
+        from datetime import datetime as dt
+        df = dt.strptime(date_from, '%Y-%m-%d').date() if date_from else None
+        dto = dt.strptime(date_to, '%Y-%m-%d').date() if date_to else None
+        filtered = []
+        for h in hoods:
+            exp = h.expiration_date()
+            if not exp:
+                continue
+            if df and exp < df:
+                continue
+            if dto and exp > dto:
+                continue
+            filtered.append(h)
+        hoods = filtered
+
+    # Sort order
+    sort_col = request.args.get('sort', '')
+    sort_dir = request.args.get('dir', 'asc')
+    if sort_col:
+        reverse = sort_dir == 'desc'
+        sort_keys = {
+            'hood_id': lambda h: h.hood_id or '',
+            'room': lambda h: f"{h.room.building_name} {h.room.room_no}",
+            'dept': lambda h: h.dept or '',
+            'status': lambda h: h.status or '',
+            'last_certified': lambda h: (h.latest_test().test_date if h.latest_test() else date.min),
+            'expiration': lambda h: h.expiration_date() or date.min,
+        }
+        key_fn = sort_keys.get(sort_col)
+        if key_fn:
+            hoods = sorted(hoods, key=key_fn, reverse=reverse)
+
     return render_template('print_report.html', title=title, items=hoods, report_type="hoods")
 
 
 @hoods_bp.route('/reports/hoods/<int:id>')
 def print_hood_detail(id):
     hood = Fumehood.query.get_or_404(id)
-    return render_template('print_report.html', title=f"Fumehood Detail: {hood.hood_id}", hood=hood, report_type="hood_detail")
+    tests = list(hood.tests)
+
+    # Search filter
+    search_q = request.args.get('q', '').lower()
+    if search_q:
+        tests = [t for t in tests if search_q in f"{t.test_date} {t.work_order_no or ''} {t.report_no or ''} {t.technologist or ''} {t.test_rating or ''}".lower()]
+
+    # Date range filter
+    date_from = request.args.get('date_from', '')
+    date_to = request.args.get('date_to', '')
+    if date_from or date_to:
+        from datetime import datetime as dt
+        df = dt.strptime(date_from, '%Y-%m-%d').date() if date_from else None
+        dto = dt.strptime(date_to, '%Y-%m-%d').date() if date_to else None
+        filtered = []
+        for t in tests:
+            td = t.test_date
+            if isinstance(td, str):
+                td = dt.strptime(td, '%Y-%m-%d').date()
+            if df and td < df:
+                continue
+            if dto and td > dto:
+                continue
+            filtered.append(t)
+        tests = filtered
+
+    # Sort order
+    sort_col = request.args.get('sort', '')
+    sort_dir = request.args.get('dir', 'asc')
+    if sort_col:
+        reverse = sort_dir == 'desc'
+        sort_keys = {
+            'test_date': lambda t: t.test_date or date.min,
+            'wo_report': lambda t: f"{t.work_order_no or ''} {t.report_no or ''}",
+            'technologist': lambda t: t.technologist or '',
+            'test_rating': lambda t: t.test_rating or '',
+        }
+        key_fn = sort_keys.get(sort_col)
+        if key_fn:
+            tests = sorted(tests, key=key_fn, reverse=reverse)
+
+    return render_template('print_report.html', title=f"Fumehood Detail: {hood.hood_id}", hood=hood, tests=tests, report_type="hood_detail")
 
 
 @hoods_bp.route('/reports/tests/<int:id>')

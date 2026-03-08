@@ -199,4 +199,26 @@ def edit_room(id):
 def print_room_report(id):
     room = Room.query.get_or_404(id)
     title = f"Room Report: {room.building_name} - {room.room_no}"
-    return render_template('print_report.html', title=title, room=room, report_type="room_detail")
+    hoods = list(room.hoods)
+
+    # Search filter
+    search_q = request.args.get('q', '').lower()
+    if search_q:
+        hoods = [h for h in hoods if search_q in f"{h.hood_id} {h.status} {h.manufacturer or ''} {h.model or ''} {h.size or ''}".lower()]
+
+    # Sort order
+    sort_col = request.args.get('sort', '')
+    sort_dir = request.args.get('dir', 'asc')
+    if sort_col:
+        reverse = sort_dir == 'desc'
+        sort_keys = {
+            'hood_id': lambda h: h.hood_id or '',
+            'status': lambda h: h.status or '',
+            'make_model': lambda h: f"{h.manufacturer or ''} {h.model or ''}",
+            'size': lambda h: h.size or '',
+        }
+        key_fn = sort_keys.get(sort_col)
+        if key_fn:
+            hoods = sorted(hoods, key=key_fn, reverse=reverse)
+
+    return render_template('print_report.html', title=title, room=room, hoods=hoods, report_type="room_detail")
