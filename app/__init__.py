@@ -1,6 +1,6 @@
 """Flask application factory."""
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, session, redirect, url_for, request
 from app.extensions import db
 from app.utils import inject_orgs
 
@@ -38,12 +38,23 @@ def create_app():
     from app.routes.hoods import hoods_bp
     from app.routes.settings import settings_bp
     from app.routes.technicians import technicians_bp
+    from app.routes.auth import auth_bp
 
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(organizations_bp)
     app.register_blueprint(hoods_bp)
     app.register_blueprint(settings_bp)
     app.register_blueprint(technicians_bp)
+    app.register_blueprint(auth_bp)
+
+    # Authentication guard — redirect to login if not logged in
+    @app.before_request
+    def require_login():
+        allowed = ('auth.login', 'auth.logout', 'static')
+        if request.endpoint and request.endpoint not in allowed:
+            # Allow print/certificate pages that open in new tabs
+            if not session.get('logged_in'):
+                return redirect(url_for('auth.login'))
 
     # Seed API route (kept at app level since it touches all models)
     from app.seed import seed_data

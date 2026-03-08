@@ -116,10 +116,26 @@
                         <i id="theme-icon" class="fa-solid fa-moon"></i>
                     </button>
 
-                    <div class="user-profile">
-                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=10b981&color=fff&bold=true" alt="User Avatar" class="avatar">
-                        <span class="username">Admin User</span>
-                        <i class="fa-solid fa-chevron-down text-muted text-sm"></i>
+                    <div class="user-dropdown-wrapper">
+                        <div class="user-profile" id="user-dropdown-toggle">
+                            <img src="https://ui-avatars.com/api/?name=Admin+User&background=10b981&color=fff&bold=true" alt="User Avatar" class="avatar">
+                            <span class="username">Admin User</span>
+                            <i class="fa-solid fa-chevron-down text-muted text-sm"></i>
+                        </div>
+                        <div class="user-dropdown" id="user-dropdown">
+                            <a href="{{ url_for('technicians.user_profile') }}" class="user-dropdown-item">
+                                <i class="fa-solid fa-user"></i> Profile
+                            </a>
+                            <a href="{{ url_for('settings.org_settings') }}" class="user-dropdown-item">
+                                <i class="fa-solid fa-gear"></i> Settings
+                            </a>
+                            <div class="user-dropdown-divider"></div>
+                            <form method="POST" action="{{ url_for('auth.logout') }}" class="m-0">
+                                <button type="submit" class="user-dropdown-item user-dropdown-logout">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -286,6 +302,23 @@
                 overlay.classList.remove('active');
             }
         });
+
+        // User Dropdown Toggle
+        const dropdownToggle = document.getElementById('user-dropdown-toggle');
+        const dropdownMenu = document.getElementById('user-dropdown');
+
+        if (dropdownToggle && dropdownMenu) {
+            dropdownToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('active');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!dropdownMenu.contains(e.target) && !dropdownToggle.contains(e.target)) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        }
     </script>
 </body>
 </html>

@@ -1,10 +1,10 @@
 /* ============================================
    O2 Fumehoods - Main Stylesheet
    ============================================
-   
+
    This is the entry point that imports all modular CSS files.
    The order of imports matters - dependencies first.
-   
+
    Modules:
    1. variables.css  - CSS custom properties (theme colors)
    2. base.css       - Reset, typography, utilities
@@ -13,7 +13,7 @@
    5. dashboard.css  - Dashboard-specific (metrics, charts)
    6. datatables.css - DataTables plugin overrides
    7. modals.css     - Modal dialogs
-   
+
    ============================================ */
 
 @import url('css/variables.css');
@@ -23,8 +23,9 @@
 @import url('css/dashboard.css');
 @import url('css/datatables.css');
 @import url('css/modals.css');
+@import url('css/login.css');
 
-/* 
+/*
    Page-specific styles can be added via <style> blocks in templates
    or by creating additional files in css/pages/ directory.
 */
